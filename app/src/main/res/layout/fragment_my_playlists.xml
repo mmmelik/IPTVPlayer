@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/fragment_fav_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        app:tabGravity="start"/>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/fragment_fav_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment_fav_tab_layout"/>
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:id="@+id/speedDialOverlayLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/speedDialView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:paddingRight="20dp"
+        app:sdExpansionMode="top"
+        app:sdOverlayLayout="@id/speedDialOverlayLayout"
+        app:sdMainFabClosedSrc="@drawable/ic_baseline_add_while_24"
+        app:sdMainFabOpenedBackgroundColor="@android:color/holo_red_light"
+        app:sdMainFabClosedBackgroundColor="@android:color/holo_blue_dark"
+        app:sdUseReverseAnimationOnClose="true"
+        app:sdMainFabAnimationRotateAngle="135"
+        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior" />
+</RelativeLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:checkableBehavior="single">
+    <group android:id="@+id/file_picker_navigation_group_folders">
+        <item android:id="@+id/file_picker_navigation_downloads"
+            android:title="@string/downloads"
+            android:icon="@drawable/ic_baseline_arrow_circle_down_24"
+            android:checkable="true"
+            android:checked="true"/>
+        <item android:id="@+id/file_picker_navigation_video"
+            android:title="@string/video"
+            android:icon="@drawable/ic_baseline_video_library_24"
+            android:checkable="true"/>
+        <item android:id="@+id/file_picker_navigation_audio"
+            android:title="@string/audio"
+            android:icon="@drawable/ic_baseline_audiotrack_24"
+            android:checkable="true"/>
+    </group>
+
+    <group android:id="@+id/file_picker_navigation_group_storage">
+        <item android:id="@+id/file_picker_navigation_internal_storage"
+            android:title="@string/internal_storage"
+            android:icon="@drawable/ic_baseline_sd_storage_24"
+            android:checkable="true"/>
+        <item android:id="@+id/file_picker_navigation_sd_storage"
+            android:title="@string/sd_card"
+            android:icon="@drawable/ic_baseline_sd_storage_24"
+            android:enabled="false"
+            android:checkable="true"/>
+    </group>
+
+    <item android:id="@+id/file_picker_navigation_item_external_apps"
+        android:title="@string/external_chooser">
+        <menu >
+            <group android:id="@+id/file_picker_navigation_group_external_apps">
+            </group>
+        </menu>
+    </item>
+
+
+</menu>

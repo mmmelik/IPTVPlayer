@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_nav_favorite"
+        android:title="@string/favorite"
+        android:icon="@drawable/ic_baseline_favorite_white_24"/>
+    <item
+        android:id="@+id/bottom_nav_playlist"
+        android:title="@string/playlist"
+        android:icon="@drawable/ic_baseline_playlist_play_white_24"/>
+    <item
+        android:id="@+id/bottom_nav_notifications"
+        android:title="@string/notifications"
+        android:icon="@drawable/ic_baseline_notifications_white_24"/>
+</menu>

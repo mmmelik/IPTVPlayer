@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">IPTVPlayer</string>
+    <string name="app_url" translatable="false">https://play.google.com/store/apps/details?id=com.appbroker.livetvplayer</string>
+    <string name="load_remote_playlist">Load Remote Playlist</string>
+    <string name="load_local_playlist">Load Local Playlist</string>
+    <string name="how_was_your_experience">How was your experience with IPTV app?</string>
+    <string name="remind_me_later">Remind Me Later</string>
+    <string name="never">Never</string>
+    <string name="submit">Submit</string>
+    <string name="not_now">Not Now</string>
+    <string name="tell_us">Tell us where we can improve</string>
+    <string name="cancel">Cancel</string>
+    <string name="favorite">Favorite</string>
+    <string name="playlist">Playlist</string>
+    <string name="notifications">Notifications</string>
+    <string name="purchase_canceled">Purchase canceled.</string>
+    <string name="service_unavailable">Service unavailable.</string>
+    <string name="billing_unavailable">Billing unavailable.</string>
+    <string name="product_unavailable">Product unavailable.</string>
+    <string name="developer_error">Developer Error</string>
+    <string name="error">Error</string>
+    <string name="product_already_owned">Product already owned.</string>
+    <string name="unknown_error">Unknown error.</string>
+    <string name="purchase_successful">Purchase successful.</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="search">Search</string>
+    <string name="pending_recent_purchase">Pending Purchase</string>
+    <string name="pending_purchase_message">You have at least one pending purchase. Once the payment reach us your purchases will be processed.</string>
+    <string name="ok">OK</string>
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_switch">Dark Mode Switch</string>
+    <string name="settings">Settings</string>
+    <string name="tos_privacy">TOS and Privacy</string>
+    <string name="contact">Contact</string>
+    <string name="faq">FAQ</string>
+    <string name="storage_permission_required">Storage permission required.</string>
+    <string name="file_pick_canceled">File pick canceled.</string>
+    <string name="following_channels_will_be_added">Following channel(s) will be added:</string>
+    <string name="select_category">Select category:</string>
+    <string name="add_category">ADD CATEGORY</string>
+    <string name="select_all">Select All</string>
+    <string name="add_channels">Add Channels</string>
+    <string name="unsellect_all">UNSELLECT ALL</string>
+    <string name="title_activity_custom_file_picker">CustomFilePickerActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="video">Video</string>
+    <string name="audio">Audio</string>
+    <string name="downloads">Downloads</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="sd_card">SD Card</string>
+    <string name="sd_card_not_available">SD card is not available</string>
+    <string name="last_edited">Last edited:</string>
+    <string name="you_cant_go_back">You can\'t go back</string>
+    <string name="unknown">Unknown</string>
+    <string name="external_chooser">External Chooser</string>
+    <string name="category_name">Category Name</string>
+    <string name="enter_url">Enter URL</string>
+    <string name="url_hint">https://example.com/test.m3u</string>
+    <string name="channel_name">Channel Name</string>
+
+
+</resources>

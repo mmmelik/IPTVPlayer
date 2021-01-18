@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/navigation_drawer_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings"/>
+    <item android:id="@+id/navigation_drawer_tos_privacy"
+        android:icon="@drawable/ic_baseline_privacy_tip_24"
+        android:title="@string/tos_privacy"/>
+    <item android:id="@+id/navigation_drawer_faq"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="@string/faq"/>
+    <item android:id="@+id/navigation_drawer_contact"
+        android:title="@string/contact"/>
+    <item
+        android:id="@+id/navigation_drawer_dark_mode"
+        android:title="Dark Mode"
+        app:actionLayout="@layout/switch_item" />
+</menu>

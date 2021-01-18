@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:id="@+id/file_picker_list_item_container">
+    <ImageView
+        android:id="@+id/file_picker_list_item_file_icon"
+        android:src="@drawable/ic_baseline_folder_48"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+    <TextView
+        android:id="@+id/file_picker_list_item_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/file_picker_list_item_file_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"/>
+    <LinearLayout
+        android:id="@+id/file_picker_list_item_size_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_toRightOf="@id/file_picker_list_item_file_icon"
+        android:layout_below="@id/file_picker_list_item_file_name"
+        android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/file_picker_list_item_file_last_modified"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColor="#6A6A6A"
+            android:maxLines="1"
+            android:singleLine="true"/>
+        <TextView
+            android:id="@+id/file_picker_list_item_file_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColor="#6A6A6A"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:gravity="center"/>
+
+    </LinearLayout>
+</RelativeLayout>
