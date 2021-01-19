@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private BottomNavigationView bottomNavigationView;
-    private DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private MaterialToolbar materialToolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -105,13 +105,17 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         SwitchMaterial switchMaterial=navigationView.getMenu().findItem(R.id.navigation_drawer_dark_mode).getActionView().findViewById(R.id.nav_switch);
-        switchMaterial.setOnClickListener(new View.OnClickListener() {
+        switchMaterial.setChecked(isDarkMode());
+        switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                switchMaterial.setChecked(!switchMaterial.isChecked());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    changeTheme(R.style.Theme_IPTVPlayerDark);
+                }else {
+                    changeTheme(R.style.Theme_IPTVPlayer);
+                }
             }
         });
-        switchMaterial.setChecked(isDarkMode());
 
         actionBarDrawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -121,17 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("item", (String) item.getTitle());
                 if (id==R.id.navigation_drawer_dark_mode){
                     SwitchMaterial switchMaterial=item.getActionView().findViewById(R.id.nav_switch);
-                    switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked){
-                                changeTheme(R.style.Theme_IPTVPlayerDark);
-                            }else {
-                                changeTheme(R.style.Theme_IPTVPlayer);
-                            }
-                        }
-                    });
-
                     switchMaterial.setChecked(!isDarkMode());
                     return true;
                 }

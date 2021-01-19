@@ -7,16 +7,15 @@
     tools:context=".MainActivity"
     android:orientation="vertical"
     android:id="@+id/rootContainer">
-    <include
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="?attr/colorCustom"/>
     <androidx.drawerlayout.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:id="@+id/drawer_layout"
         android:layout_below="@id/toolbar"
         >
@@ -46,7 +45,6 @@
             android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:layout_gravity="left"
             app:menu="@menu/navigation_menu"
             app:headerLayout="@layout/nav_header" />
