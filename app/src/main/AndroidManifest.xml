@@ -44,7 +44,9 @@
 
         <activity
             android:name=".ExoPlayerActivity"
-            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.IPTVPlayerDark.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

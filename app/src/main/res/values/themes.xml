@@ -35,6 +35,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.IPTVPlayerDark.FullScreen" parent="Theme.IPTVPlayerDark">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
     <style name="WindowAnimationTransition">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
