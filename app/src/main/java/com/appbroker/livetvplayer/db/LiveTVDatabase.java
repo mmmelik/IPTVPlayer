@@ -41,7 +41,7 @@ public abstract class LiveTVDatabase extends RoomDatabase {
                 @Override
                 public void run() {
                     instance.categoryDAO().addCategory(new Category("Test"));
-                    instance.channelDAO().addChannel(new Channel(1,"Test Channel", StringUtils.makeUri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_720p_stereo.avi")));
+                    instance.channelDAO().addChannel(new Channel(1,"Test Channel", StringUtils.makeUri("https://ia902804.us.archive.org/7/items/BigBuckBunnyOfficialBlenderFoundationShortFilm720p30fps/Big%20Buck%20Bunny%20Official%20Blender%20Foundation%20Short%20Film%20720p%2030fps.mp4")));
                 }
             }.start();
         }
