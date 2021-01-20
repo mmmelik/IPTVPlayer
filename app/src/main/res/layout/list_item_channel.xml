@@ -31,13 +31,17 @@
                 android:text="Title"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLines="1"/>
             <TextView
                 android:id="@+id/fav_list_item_sub_text"
                 android:text="Sub Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:maxLines="1"
                 android:textSize="12sp"/>
         </LinearLayout>
     </RelativeLayout>
