@@ -7,10 +7,10 @@ import androidx.room.TypeConverter;
 public class UriTypeConverter {
     @TypeConverter
     public static Uri toUri(String s){
-        return Uri.parse(s);
+        return StringUtils.makeUri(s);
     }
     @TypeConverter
     public static String toString(Uri uri){
-        return uri.toString();
+        return uri.getPath();
     }
 }
