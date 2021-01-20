@@ -14,6 +14,7 @@ import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.model.Category;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.StringUtils;
 
 @Database(entities = {Channel.class,Category.class}, version = 2)
 public abstract class LiveTVDatabase extends RoomDatabase {
@@ -39,12 +40,8 @@ public abstract class LiveTVDatabase extends RoomDatabase {
             new Thread(){
                 @Override
                 public void run() {
-                    for (int i=0;i<5;i++){
-                        instance.categoryDAO().addCategory(new Category("Category "+i));
-                        for (int j=0;j<50;j++){
-                            instance.channelDAO().addChannel(new Channel(i+1,randomString(10), Uri.parse(randomString(50))));
-                        }
-                    }
+                    instance.categoryDAO().addCategory(new Category("Test"));
+                    instance.channelDAO().addChannel(new Channel(1,"Test Channel", StringUtils.makeUri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_720p_stereo.avi")));
                 }
             }.start();
         }
@@ -60,28 +57,4 @@ public abstract class LiveTVDatabase extends RoomDatabase {
             }.start();
         }
     };
-    public static String randomString(int size) {
-        // chose a Character random from this String
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "0123456789"
-                + "abcdefghijklmnopqrstuvxyz";
-
-        // create StringBuffer size of AlphaNumericString
-        StringBuilder sb = new StringBuilder(size);
-
-        for (int i = 0; i < size; i++) {
-
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
-            int index
-                    = (int)(AlphaNumericString.length()
-                    * Math.random());
-
-            // add Character one by one in end of sb
-            sb.append(AlphaNumericString
-                    .charAt(index));
-        }
-
-        return sb.toString();
-    }
 }
