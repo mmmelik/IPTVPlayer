@@ -179,7 +179,7 @@ public class M3UParser {
                 }else if (inChannelFlag){
                     channelUri=line;
                     inChannelFlag=false;
-                    channels.add(new Channel(Constants.CATEGORY_ID_TEMP,channelName, Uri.parse(URLEncoder.encode(channelUri, "UTF-8"))));
+                    channels.add(new Channel(Constants.CATEGORY_ID_TEMP,channelName, StringUtils.makeUri(channelUri)));
                 }
             }
         }
