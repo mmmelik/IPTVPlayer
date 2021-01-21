@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
+import com.google.android.gms.cast.MediaInfo;
 
 import java.net.MalformedURLException;
 import java.net.URL;

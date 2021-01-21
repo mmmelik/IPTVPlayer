@@ -61,11 +61,6 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5600029608669706~7346528129" />
 
-        <meta-data
-            android:name=
-                "com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.appbroker.livetvplayer.CastOptionsProvider" />
-
         <provider
             android:name="com.startapp.sdk.adsbase.StartAppInitProvider"
             android:authorities="${applicationId}.startappinitprovider"

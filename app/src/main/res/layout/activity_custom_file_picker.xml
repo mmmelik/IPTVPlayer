@@ -38,7 +38,7 @@
                     android:id="@+id/file_picker_file_path"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/exo_gray"
+                    android:textColor="@android:color/darker_gray"
                     android:textSize="16sp"
                     android:maxLines="1"
                     android:singleLine="true"
