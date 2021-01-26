@@ -1,13 +1,11 @@
 package com.appbroker.livetvplayer.fragment;
 
 import android.Manifest;
-import android.app.Application;
 import android.app.SearchManager;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,8 +35,10 @@ import com.appbroker.livetvplayer.listener.DataBaseJobListener;
 import com.appbroker.livetvplayer.listener.ParserListener;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.DialogUtils;
 import com.appbroker.livetvplayer.util.Enums;
 import com.appbroker.livetvplayer.util.M3UParser;
+import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.appbroker.livetvplayer.viewmodel.CategoryViewModel;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -63,7 +63,9 @@ public class MyPlaylistsFragment extends Fragment {
     private SpeedDialView speedDialView;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private ImageView addCategory;
     private CustomViewPagerAdapter customViewPagerAdapter;
+    private SearchView searchView;
 
     public MyPlaylistsFragment() {
     }
@@ -86,8 +88,16 @@ public class MyPlaylistsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        tabLayout=view.findViewById(R.id.fragment_fav_tab_layout);
-        viewPager=view.findViewById(R.id.fragment_fav_view_pager);
+        tabLayout=view.findViewById(R.id.fragment_playlist_tab_layout);
+        viewPager=view.findViewById(R.id.fragment_playlist_view_pager);
+        addCategory=view.findViewById(R.id.fragment_playlist_add_category);
+
+        addCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogUtils.createAddCategoryDialog((MainActivity)getActivity()).show();
+            }
+        });
         customViewPagerAdapter=new CustomViewPagerAdapter(this,getActivity().getApplication());
         viewPager.setAdapter(customViewPagerAdapter);
         new TabLayoutMediator(tabLayout, viewPager, true, true, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -98,17 +108,15 @@ public class MyPlaylistsFragment extends Fragment {
         }).attach();
 
 
-        speedDialView=view.findViewById(R.id.speedDialView);
+        speedDialView=view.findViewById(R.id.fragment_playlist_speedDialView);
         speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_playlist_local,R.drawable.ic_baseline_create_new_folder_white_24)
                 .setLabel(R.string.load_local_playlist)
-                .setLabelColor(Color.BLUE)
-                .setLabelBackgroundColor(Color.WHITE)
+                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(),R.attr.fabBackgroundColor))
                 .create());
 
         speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_playlist_url,R.drawable.ic_baseline_link_white_24)
                 .setLabel(R.string.load_remote_playlist)
-                .setLabelColor(Color.BLUE)
-                .setLabelBackgroundColor(Color.WHITE)
+                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(),R.attr.fabBackgroundColor))
                 .create());
 
         speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
@@ -301,7 +309,7 @@ public class MyPlaylistsFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.action_menu,menu);
         MenuItem searchItem=menu.findItem(R.id.action_search);
-        SearchView searchView= (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,26 +326,42 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.i("onQueryTextChange", newText);
-                return true;
+                try {
+                    Log.i("onQueryTextChange", newText);
+                    if (getActivity()!=null){
+                        if ("".equals(newText)){
+                            ((MainActivity)getActivity()).searchFragmentChangeState(false,null);
+                        }else {
+                            ((MainActivity)getActivity()).searchFragmentChangeState(true, newText);
+                        }
+                    }
+                    return true;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return true;
+                }
             }
         });
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 Log.d("search","expand");
-
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                //todo: remove search fragment
-
                 return true;
             }
         });
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("fragment","pause");
+        ((MainActivity)getActivity()).detachSearchFragment();
+        super.onPause();
     }
 }

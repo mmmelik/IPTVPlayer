@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_all"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="?attr/colorAccent"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
@@ -75,7 +75,7 @@
                     android:layout_height="24dp"
                     android:layout_margin="10dp"
                     android:src="@drawable/ic_baseline_add_box_24"
-                    android:contentDescription="@string/add_category" />
+                    android:contentDescription="@string/add_category"/>
             </LinearLayout>
         </LinearLayout>
         <Button
@@ -83,6 +83,7 @@
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_channels"/>
+            android:text="@string/add_channels"
+            android:background="?attr/colorAccent"/>
     </LinearLayout>
 </LinearLayout>

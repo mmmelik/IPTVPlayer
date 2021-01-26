@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.startapp:inapp-sdk:4.7.5'
     implementation 'com.lovedise:permissiongen:0.0.6'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.12.2'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.12.2'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.12.2'
     implementation 'commons-io:commons-io:2.6'
 }

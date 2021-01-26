@@ -4,35 +4,47 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/fragment_fav_tab_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"
-        app:tabGravity="start"/>
+        android:orientation="horizontal"
+        android:id="@+id/tab_container">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/fragment_playlist_tab_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:tabMode="scrollable"
+            app:tabGravity="start"
+            android:background="?attr/tabLayoutBackground"
+            app:tabIndicatorColor="?attr/tabIndicatorColor"
+            app:tabTextColor="?attr/tabTextColor"
+            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/fragment_playlist_add_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_add_box_24"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/add_category"/>
+    </LinearLayout>
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/fragment_fav_view_pager"
+        android:id="@+id/fragment_playlist_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fragment_fav_tab_layout"/>
-    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:id="@+id/speedDialOverlayLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_below="@id/tab_container"/>
     <com.leinardi.android.speeddial.SpeedDialView
-        android:id="@+id/speedDialView"
+        android:id="@+id/fragment_playlist_speedDialView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:paddingRight="20dp"
         app:sdExpansionMode="top"
-        app:sdOverlayLayout="@id/speedDialOverlayLayout"
-        app:sdMainFabClosedSrc="@drawable/ic_baseline_add_while_24"
-        app:sdMainFabOpenedBackgroundColor="@android:color/holo_red_light"
-        app:sdMainFabClosedBackgroundColor="@android:color/holo_blue_dark"
+        app:sdMainFabClosedSrc="@drawable/ic_baseline_add_white_24"
+        app:sdMainFabOpenedBackgroundColor="?attr/colorAccent"
+        app:sdMainFabClosedBackgroundColor="?attr/colorAccent"
         app:sdUseReverseAnimationOnClose="true"
         app:sdMainFabAnimationRotateAngle="135"
         app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior" />

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,17 +25,11 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.flv.FlvExtractor;
 import com.google.android.exoplayer2.extractor.mp4.Mp4Extractor;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoListener;
-import com.google.android.gms.cast.MediaInfo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener {
     private int channelId;
@@ -50,9 +45,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
         setContentView(R.layout.activity_exo_player);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions =View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
+            WindowInsetsController windowInsetsController=getWindow().getInsetsController();
+            windowInsetsController.hide(WindowInsets.Type.statusBars());
+        }else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
 
 
         Intent intent=getIntent();
@@ -75,6 +73,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        channel.setLastWatch(new Date().getTime());
+                        channelViewModel.updateChannel(channel);
                         try {
                             new URL(s);
                         }catch (MalformedURLException e){

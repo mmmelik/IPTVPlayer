@@ -12,12 +12,19 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="?attr/colorCustom"/>
+        android:background="?attr/colorToolbar"/>
+    <ProgressBar
+        android:id="@+id/main_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_below="@id/toolbar"
+        android:progress="100"/>
     <androidx.drawerlayout.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer_layout"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/main_progressbar"
         >
         <RelativeLayout
             android:id="@+id/rootLayout"
@@ -28,18 +35,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                app:menu="@menu/bottom_nav_menu"/>
+                app:menu="@menu/bottom_nav_menu"
+                android:theme="?attr/bottomNavigationTheme"/>
             <FrameLayout
                 android:id="@+id/bannerFrame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/bottomNavigationView">
             </FrameLayout>
-            <FrameLayout
-                android:id="@+id/contentFrame"
+            <RelativeLayout
+                android:id="@+id/contentFrameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/bannerFrame"/>
+                android:layout_above="@id/bannerFrame">
+                <FrameLayout
+                    android:id="@+id/search_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <FrameLayout
+                    android:id="@+id/contentFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
         </RelativeLayout>
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_view"
@@ -47,7 +64,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             app:menu="@menu/navigation_menu"
-            app:headerLayout="@layout/nav_header" />
+            app:headerLayout="@layout/nav_header"/>
     </androidx.drawerlayout.widget.DrawerLayout>
 
 

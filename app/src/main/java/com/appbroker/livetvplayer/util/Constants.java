@@ -9,6 +9,11 @@ public class Constants {
     public static final Integer CATEGORY_ID_FAV=-1;
     public static final Integer CATEGORY_ID_TEMP=-2;
 
+    public static final String TAG_FAV_FRAGMENT="TAG_FAV_FRAGMENT";
+    public static final String TAG_MY_PLAYLIST_FRAGMENT="TAG_MY_PLAYLIST_FRAGMENT";
+    public static final String TAG_NOTIFICATIONS_FRAGMENT ="TAG_NOTIFICATION_FRAGMENT";
+    public static final String TAG_SEARCH_FRAGMENT ="TAG_SEARCH_FRAGMENT";
+
     public static final String ARGS_CATEGORY_ID = "ARGS_CATEGORY_ID";
     public static final String ARGS_POSITION = "ARGS_POSITION";
     public static final String ARGS_CHANNEL_ID = "ARGS_CHANNEL_ID";

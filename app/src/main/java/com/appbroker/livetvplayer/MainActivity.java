@@ -7,22 +7,19 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -41,8 +38,10 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.appbroker.livetvplayer.fragment.FavoriteFragment;
 import com.appbroker.livetvplayer.fragment.MyPlaylistsFragment;
 import com.appbroker.livetvplayer.fragment.NotificationsFragment;
+import com.appbroker.livetvplayer.fragment.SearchFragment;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
+import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout bannerFrame;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
+    private RelativeLayout contentFrameContainer;
     private BottomNavigationView bottomNavigationView;
     public DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -77,15 +77,20 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private View loadingView;
 
-    private PrefHelper prefHelper;
     private BillingClient billingClient;
     private List<String> skuList;
     private SkuDetails skuDetailsNoAds;
+    private PrefHelper prefHelper;
 
+    private FavoriteFragment favoriteFragment;
+    private MyPlaylistsFragment myPlaylistsFragment;
+    private NotificationsFragment notificationsFragment;
+    private SearchFragment searchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initiateServices();
-        setTheme(getPrefTheme());
+
+        setTheme(ThemeUtil.getPrefTheme(prefHelper));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateViews() {
+        contentFrameContainer=findViewById(R.id.contentFrameContainer);
         rootContainer=findViewById(R.id.rootContainer);
         materialToolbar=findViewById(R.id.toolbar);
         setSupportActionBar(materialToolbar);
@@ -105,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         SwitchMaterial switchMaterial=navigationView.getMenu().findItem(R.id.navigation_drawer_dark_mode).getActionView().findViewById(R.id.nav_switch);
-        switchMaterial.setChecked(isDarkMode());
+        switchMaterial.setChecked(ThemeUtil.isDarkMode(prefHelper));
         switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     changeTheme(R.style.Theme_IPTVPlayerDark);
                 }else {
-                    changeTheme(R.style.Theme_IPTVPlayer);
+                    changeTheme(R.style.Theme_IPTVPlayerLight);
                 }
             }
         });
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("item", (String) item.getTitle());
                 if (id==R.id.navigation_drawer_dark_mode){
                     SwitchMaterial switchMaterial=item.getActionView().findViewById(R.id.nav_switch);
-                    switchMaterial.setChecked(!isDarkMode());
+                    switchMaterial.setChecked(!ThemeUtil.isDarkMode(prefHelper));
                     return true;
                 }
                 drawerLayout.closeDrawers();
@@ -145,29 +151,23 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager fragmentManager=getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                 if (item.getItemId()==R.id.bottom_nav_favorite){
-                    FavoriteFragment f= (FavoriteFragment) fragmentManager.findFragmentByTag("fav_fragment");
-                    if (f==null){
-                        fragmentTransaction.replace(R.id.contentFrame,new FavoriteFragment(),"fav_fragment");
-                    }else {
-                        fragmentTransaction.replace(R.id.contentFrame,f,"fav_fragment");
+                    favoriteFragment= (FavoriteFragment) fragmentManager.findFragmentByTag(Constants.TAG_FAV_FRAGMENT);
+                    if (favoriteFragment==null){
+                        favoriteFragment=new FavoriteFragment();
                     }
-                    fragmentTransaction.commit();
+                    replaceFragment(favoriteFragment,Constants.TAG_FAV_FRAGMENT);
                 }else if (item.getItemId()==R.id.bottom_nav_playlist){
-                    MyPlaylistsFragment f= (MyPlaylistsFragment) fragmentManager.findFragmentByTag("playlist_fragment");
-                    if (f==null){
-                        fragmentTransaction.replace(R.id.contentFrame,new MyPlaylistsFragment(),"playlist_fragment");
-                    }else {
-                        fragmentTransaction.replace(R.id.contentFrame,f,"playlist_fragment");
+                    myPlaylistsFragment=(MyPlaylistsFragment) fragmentManager.findFragmentByTag(Constants.TAG_MY_PLAYLIST_FRAGMENT);
+                    if (myPlaylistsFragment==null){
+                        myPlaylistsFragment=new MyPlaylistsFragment();
                     }
-                    fragmentTransaction.commit();
+                    replaceFragment(myPlaylistsFragment,Constants.TAG_MY_PLAYLIST_FRAGMENT);
                 }else if (item.getItemId()==R.id.bottom_nav_notifications){
-                    NotificationsFragment f= (NotificationsFragment) fragmentManager.findFragmentByTag("notifications_fragment");
-                    if (f==null){
-                        fragmentTransaction.replace(R.id.contentFrame,new NotificationsFragment(),"notifications_fragment");
-                    }else {
-                        fragmentTransaction.replace(R.id.contentFrame,f,"notifications_fragment");
+                    notificationsFragment=(NotificationsFragment) fragmentManager.findFragmentByTag(Constants.TAG_NOTIFICATIONS_FRAGMENT);
+                    if (notificationsFragment==null){
+                        notificationsFragment=new NotificationsFragment();
                     }
-                    fragmentTransaction.commit();
+                    replaceFragment(notificationsFragment,Constants.TAG_NOTIFICATIONS_FRAGMENT);
                 }
                 return true;
             }
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateServices() {
-        prefHelper = new PrefHelper(MainActivity.this);
+        prefHelper=new PrefHelper(MainActivity.this);
         billingWorks();
         adWorks();
     }
@@ -417,22 +417,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private @StyleRes int getPrefTheme(){
-        int id=prefHelper.readIntPref(Constants.PREF_THEME);
-        if (id==-1){
-            return R.style.Theme_IPTVPlayer;
-        }else {
-            return id;
-        }
-    }
-    private boolean isDarkMode(){
-        if (getPrefTheme()==R.style.Theme_IPTVPlayerDark){
-            return true;
-        }else {
-            return false;
-        }
-    }
-
     private synchronized void changeTheme(@StyleRes int id){
         new Thread(){
             @Override
@@ -477,7 +461,35 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-
     }
 
+    public void detachSearchFragment(){
+        searchFragmentChangeState(false,null);
+        searchFragment=null;
+    }
+    public void searchFragmentChangeState(boolean show,String query){
+        Log.d("searchFragment", String.valueOf(show));
+        if(show){
+            if(searchFragment==null){
+                searchFragment=new SearchFragment(getApplication());
+                FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.search_frame,searchFragment,Constants.TAG_SEARCH_FRAGMENT);
+                fragmentTransaction.commit();
+            }
+            contentFrameContainer.findViewById(R.id.search_frame).setVisibility(View.VISIBLE);
+            contentFrameContainer.findViewById(R.id.contentFrame).setVisibility(View.GONE);
+
+            searchFragment.updateQuery(query);
+        }else {
+            contentFrameContainer.findViewById(R.id.contentFrame).setVisibility(View.VISIBLE);
+            contentFrameContainer.findViewById(R.id.search_frame).setVisibility(View.GONE);
+        }
+    }
+
+    private void replaceFragment(Fragment fragment,String tag){
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.contentFrame,fragment,tag);
+        fragmentTransaction.commit();
+    }
 }

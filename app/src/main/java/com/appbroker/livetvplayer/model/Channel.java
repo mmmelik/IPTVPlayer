@@ -28,6 +28,8 @@ public class Channel {
 
     private boolean checked=true;
 
+    private long lastWatch;
+
     public Channel() {
     }
 
@@ -38,6 +40,13 @@ public class Channel {
         this.uri = uri;
     }
 
+    public long getLastWatch() {
+        return lastWatch;
+    }
+
+    public void setLastWatch(long lastWatch) {
+        this.lastWatch = lastWatch;
+    }
 
     public boolean isChecked() {
         return checked;

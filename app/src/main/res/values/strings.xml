@@ -66,6 +66,13 @@
     <string name="enter_url">Enter URL</string>
     <string name="url_hint">https://example.com/test.m3u</string>
     <string name="channel_name">Channel Name</string>
+    <string name="last_watch">"Last watch:"</string>
+    <string name="recently">Recently</string>
+    <string name="minutes_ago">minutes ago</string>
+    <string name="hours_ago">hours ago</string>
+    <string name="days_ago">days ago</string>
+    <string name="search_results">Search Results</string>
+    <string name="no_result">No result</string>
 
 
 </resources>

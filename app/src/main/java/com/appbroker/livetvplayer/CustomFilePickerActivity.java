@@ -11,6 +11,8 @@ import com.appbroker.livetvplayer.adapter.FilePickerDirListRecyclerAdapter;
 import com.appbroker.livetvplayer.listener.FileSelectListener;
 import com.appbroker.livetvplayer.model.CustomFile;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.PrefHelper;
+import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.google.android.gms.common.api.Result;
 import com.google.android.material.navigation.NavigationView;
 
@@ -56,15 +58,18 @@ public class CustomFilePickerActivity extends AppCompatActivity {
     private File audioDir;
     private File sdDir;
     private File internalDir;
-
     private File currentFolder;
     private File currentRoot;
 
     private HashMap<Integer,ResolveInfo> externalAppsIdMap;
+    private PrefHelper prefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefHelper=new PrefHelper(CustomFilePickerActivity.this);
+        setTheme(ThemeUtil.getPrefTheme(prefHelper));
+
         setContentView(R.layout.activity_custom_file_picker);
         Toolbar toolbar = findViewById(R.id.file_picker_toolbar);
         setSupportActionBar(toolbar);

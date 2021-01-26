@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.adapter.CategoryListSpinnerAdapter;
 import com.appbroker.livetvplayer.adapter.ChannelAddRecyclerViewAdapter;
@@ -27,6 +28,7 @@ import com.appbroker.livetvplayer.listener.ChannelListListener;
 import com.appbroker.livetvplayer.model.Category;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.DialogUtils;
 import com.appbroker.livetvplayer.viewmodel.CategoryViewModel;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -88,26 +90,8 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
         addCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(ChannelAddBottomSheetDialogFragment.this.requireContext());
-                View dialogView=View.inflate(getContext(),R.layout.dialog_add_category,null);
-                builder.setView(dialogView);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String s =((EditText)dialogView.findViewById(R.id.dialog_add_category_edit)).getText().toString();
-                        if (!s.equals("")){
-                            categoryViewModel.addCategory(new Category(s));
-                        }
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
+                AlertDialog alertDialog= DialogUtils.createAddCategoryDialog((MainActivity)getActivity());
+                alertDialog.show();
             }
         });
     }
@@ -127,7 +111,6 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
     private void toggleSelectAllButton(boolean allChecked){
         if (allChecked){
             selectAllButton.setText(R.string.unsellect_all);
-            selectAllButton.setTextColor(getResources().getColor(R.color.lightRed));
             selectAllButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -135,7 +118,6 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
                 }
             });
         }else {
-            selectAllButton.setTextColor(getResources().getColor(R.color.lightBlue));
             selectAllButton.setText(R.string.select_all);
             selectAllButton.setOnClickListener(new View.OnClickListener() {
                 @Override
