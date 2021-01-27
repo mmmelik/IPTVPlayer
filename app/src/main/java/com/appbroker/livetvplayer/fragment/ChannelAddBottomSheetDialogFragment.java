@@ -15,6 +15,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import com.appbroker.livetvplayer.model.Category;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.DialogUtils;
+import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.appbroker.livetvplayer.viewmodel.CategoryViewModel;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -95,19 +97,6 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
             }
         });
     }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog mDialog = super.onCreateDialog(savedInstanceState);
-        mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-        });
-        return mDialog;
-    }
     private void toggleSelectAllButton(boolean allChecked){
         if (allChecked){
             selectAllButton.setText(R.string.unsellect_all);
@@ -140,5 +129,10 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
     public void onCancel(@NonNull DialogInterface dialog) {
         channelViewModel.dismissTempChannels();
         super.onCancel(dialog);
+    }
+
+    @Override
+    public int getTheme() {
+        return ThemeUtil.getStyleFromAttr(getContext(),R.attr.bottomSheetDialogTheme);
     }
 }

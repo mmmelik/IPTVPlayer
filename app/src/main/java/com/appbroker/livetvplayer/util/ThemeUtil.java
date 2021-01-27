@@ -33,4 +33,10 @@ public class ThemeUtil {
         theme.resolveAttribute(attr, typedValue, true);
         return typedValue.data;
     }
+    public static @StyleRes int getStyleFromAttr(Context context,@AttrRes int attr){
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(attr, typedValue, true);
+        return typedValue.data;
+    }
 }

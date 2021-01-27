@@ -13,6 +13,7 @@ public class Constants {
     public static final String TAG_MY_PLAYLIST_FRAGMENT="TAG_MY_PLAYLIST_FRAGMENT";
     public static final String TAG_NOTIFICATIONS_FRAGMENT ="TAG_NOTIFICATION_FRAGMENT";
     public static final String TAG_SEARCH_FRAGMENT ="TAG_SEARCH_FRAGMENT";
+    public static final String TAG_EXPORT_DIALOG_FRAGMENT ="TAG_EXPORT_DIALOG_FRAGMENT";
 
     public static final String ARGS_CATEGORY_ID = "ARGS_CATEGORY_ID";
     public static final String ARGS_POSITION = "ARGS_POSITION";

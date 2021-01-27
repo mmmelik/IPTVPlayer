@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textSize="16sp"
-        android:textColor="@color/black"
         android:text="@string/add_channels"
         android:gravity="center"/>
     <LinearLayout
@@ -32,12 +31,11 @@
             android:text="@string/following_channels_will_be_added"
             android:textSize="16sp"
             android:singleLine="true"/>
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bottom_sheet_select_all_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_all"
-            android:textColor="?attr/colorAccent"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
@@ -78,7 +76,7 @@
                     android:contentDescription="@string/add_category"/>
             </LinearLayout>
         </LinearLayout>
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bottom_sheet_add_channels_button"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"

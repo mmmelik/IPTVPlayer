@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
     }
     private void adWorks() {
-        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
             MobileAds.initialize(this);
             AdView admobBanner=new AdView(this);
             admobBanner.setAdSize(AdSize.SMART_BANNER);

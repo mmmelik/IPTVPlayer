@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -57,7 +58,7 @@ import kr.co.namee.permissiongen.PermissionSuccess;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class MyPlaylistsFragment extends Fragment {
+public class MyPlaylistsFragment extends Fragment{
     private CategoryViewModel categoryViewModel;
     private ChannelViewModel channelViewModel;
     private SpeedDialView speedDialView;
@@ -83,7 +84,8 @@ public class MyPlaylistsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_playlists,container,false);
+        View view=inflater.inflate(R.layout.fragment_my_playlists,container,false);
+        return view;
     }
 
     @Override
@@ -111,14 +113,21 @@ public class MyPlaylistsFragment extends Fragment {
         speedDialView=view.findViewById(R.id.fragment_playlist_speedDialView);
         speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_playlist_local,R.drawable.ic_baseline_create_new_folder_white_24)
                 .setLabel(R.string.load_local_playlist)
-                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(),R.attr.fabBackgroundColor))
+                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(), R.attr.cardBackgroundColor))
+                .setFabImageTintColor(ThemeUtil.getColorFromAttr(getContext(),android.R.attr.textColor))
                 .create());
 
         speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_playlist_url,R.drawable.ic_baseline_link_white_24)
                 .setLabel(R.string.load_remote_playlist)
-                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(),R.attr.fabBackgroundColor))
+                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(), R.attr.cardBackgroundColor))
+                .setFabImageTintColor(ThemeUtil.getColorFromAttr(getContext(),android.R.attr.textColor))
                 .create());
 
+        speedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_export_playlist,R.drawable.ic_baseline_export_24)
+                .setLabel(R.string.export_playlist)
+                .setFabBackgroundColor(ThemeUtil.getColorFromAttr(getContext(), R.attr.cardBackgroundColor))
+                .setFabImageTintColor(ThemeUtil.getColorFromAttr(getContext(),android.R.attr.textColor))
+                .create());
         speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
             public boolean onActionSelected(SpeedDialActionItem actionItem) {
@@ -126,13 +135,20 @@ public class MyPlaylistsFragment extends Fragment {
                     launchURLDialog();
                 }else if (actionItem.getId()==R.id.fab_add_playlist_local){
                     launchFileChooserFlow();
+                }else if(actionItem.getId()==R.id.fab_export_playlist){
+                    exportPlaylistFlow();
                 }
                 speedDialView.close();
                 return true;
             }
         });
+        //todo:intercept ontouch and close fab.
         super.onViewCreated(view, savedInstanceState);
     }
+
+    private void exportPlaylistFlow() {
+    }
+
     private void launchURLDialog() {
         AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
         View view=View.inflate(getContext(),R.layout.dialog_load_url,null);
@@ -224,10 +240,12 @@ public class MyPlaylistsFragment extends Fragment {
         if (requestCode==Constants.REQUEST_CODE_PICK_FILE){
             if (resultCode==RESULT_OK){
                 Uri uri=data.getData();
-                Log.d("pick",uri.toString());
-                handleFileSelect(uri.toString(),true);
-
-                //TODO:category sor.
+                if (uri!=null){
+                    Log.d("pick",uri.toString());
+                    handleFileSelect(uri.toString(),true);
+                }else {
+                    ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.unknown_error));
+                }
             }else if (requestCode==RESULT_CANCELED){
                 ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.file_pick_canceled));
             }
@@ -307,7 +325,7 @@ public class MyPlaylistsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.action_menu,menu);
+        inflater.inflate(R.menu.fragment_myplaylist_action_menu,menu);
         MenuItem searchItem=menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(new View.OnClickListener() {
@@ -364,4 +382,5 @@ public class MyPlaylistsFragment extends Fragment {
         ((MainActivity)getActivity()).detachSearchFragment();
         super.onPause();
     }
+
 }

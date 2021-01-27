@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="bottomSheetBackground" format="color"/>
     <attr name="colorToolbar" format="color"/>
     <attr name="tabLayoutBackground" format="color"/>
     <attr name="bottomNavigationTheme" format="reference"/>

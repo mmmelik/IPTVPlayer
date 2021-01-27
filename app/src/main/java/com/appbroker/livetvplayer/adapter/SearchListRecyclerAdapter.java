@@ -71,6 +71,8 @@ public class SearchListRecyclerAdapter extends RecyclerView.Adapter {
             if (channel.getLastWatch()!=0){
                 String l=getString(R.string.last_watch)+" "+parseLastWatch(channel.getLastWatch());
                 lastWatchText.setText(l);
+            }else {
+                lastWatchText.setText("");
             }
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
