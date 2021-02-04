@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appbroker.livetvplayer.ExoPlayerActivity;
-import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.model.Category;
 import com.appbroker.livetvplayer.model.Channel;
@@ -100,7 +99,7 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
                 }
             });
             if (channel.isFavorite()){
-                favImage.setImageDrawable(ResourcesCompat.getDrawable(fragment.getResources(),R.drawable.ic_baseline_favorite_white_24,fragment.getContext().getTheme()));
+                favImage.setImageDrawable(ResourcesCompat.getDrawable(fragment.getResources(),R.drawable.ic_baseline_favorite_accent_24,fragment.getContext().getTheme()));
             }else {
                 favImage.setImageDrawable(ResourcesCompat.getDrawable(fragment.getResources(),R.drawable.ic_baseline_favorite_border_24,fragment.getContext().getTheme()));
             }

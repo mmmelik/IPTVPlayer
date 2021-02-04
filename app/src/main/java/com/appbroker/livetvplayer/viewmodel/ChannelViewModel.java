@@ -30,8 +30,8 @@ public class ChannelViewModel extends AndroidViewModel {
         channelService.addTempChannels(categoryId);
     }
 
-    public void getChannelById(int id,DataBaseJobListener dataBaseJobListener){
-        channelService.getChannelById(id,dataBaseJobListener);
+    public LiveData<Channel> getChannelById(int id,boolean update){
+        return channelService.getChannelById(id, update);
     }
 
     public void dismissTempChannels(){

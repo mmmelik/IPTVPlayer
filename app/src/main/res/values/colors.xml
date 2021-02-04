@@ -3,8 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
+    <color name="accentColor">#FFFF0000</color>
     <color name="gray_light">#6C6C6C</color>
     <color name="gray_lighter">#8C8B8B</color>
     <color name="gray_dark">#252525</color>
     <color name="gray_darker">#1B1B1B</color>
+    <color name="gray_universal">#333333</color>
 </resources>

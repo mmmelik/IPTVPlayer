@@ -19,6 +19,10 @@ public class Constants {
     public static final String ARGS_POSITION = "ARGS_POSITION";
     public static final String ARGS_CHANNEL_ID = "ARGS_CHANNEL_ID";
     public static final String ARGS_FILE_URI = "ARGS_FILE_URI";
+    public static final String ARGS_ACTIVITY_TYPE = "ARGS_ACTIVITY_TYPE";
+
+    public static final String TYPE_TOS="TYPE_TOS";
+    public static final String TYPE_PRIVACY="TYPE_PRIVACY";
 
     public static final String APP_ID="com.appbroker.livetvplayer";
 

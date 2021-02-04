@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface ChannelDAO {
     @Query("SELECT * FROM channel WHERE id=:id LIMIT 1")
-    Channel getChannelById(int id);
+    LiveData<Channel> getChannelById(int id);
 
     @Query("SELECT * FROM channel")
     LiveData<List<Channel>> getAll();
@@ -47,4 +47,7 @@ public interface ChannelDAO {
 
     @Query("UPDATE channel SET checked=:isChecked WHERE category_id=-2")
     void updateTempChannelsChecked(boolean isChecked);
+
+    @Query("UPDATE channel SET lastWatch=:lastWatch WHERE id=:id")
+    void updateChannelDate(long id, long lastWatch);
 }

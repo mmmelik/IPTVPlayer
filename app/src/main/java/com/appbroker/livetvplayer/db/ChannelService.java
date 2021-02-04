@@ -8,6 +8,7 @@ import com.appbroker.livetvplayer.listener.DataBaseJobListener;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 
+import java.util.Date;
 import java.util.List;
 
 public class ChannelService {
@@ -55,6 +56,16 @@ public class ChannelService {
         }.start();
     }
 
+    public void updateChannel(Channel channel, DataBaseJobListener dataBaseJobListener){
+        new Thread(){
+            @Override
+            public void run() {
+                channelDAO.updateChannel(channel);
+                dataBaseJobListener.onFinish(channel);
+            }
+        }.start();
+    }
+
     public void addTempChannels(int categoryId) {
         new Thread(){
             @Override
@@ -92,13 +103,15 @@ public class ChannelService {
         }.start();
     }
 
-    public void getChannelById(int id,DataBaseJobListener dataBaseJobListener) {
+    public LiveData<Channel> getChannelById(int id, boolean update) {
         new Thread(){
             @Override
             public void run() {
-                Channel channel=channelDAO.getChannelById(id);
-                dataBaseJobListener.onFinish(channel);
+                if (update){
+                    channelDAO.updateChannelDate(id,new Date().getTime());
+                }
             }
         }.start();
+        return channelDAO.getChannelById(id);
     }
 }

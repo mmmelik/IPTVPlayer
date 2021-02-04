@@ -3,4 +3,5 @@
     <attr name="colorToolbar" format="color"/>
     <attr name="tabLayoutBackground" format="color"/>
     <attr name="bottomNavigationTheme" format="reference"/>
+    <attr name="colorBottomSheetBackground" format="color"/>
 </resources>

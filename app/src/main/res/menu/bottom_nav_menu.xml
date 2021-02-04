@@ -3,7 +3,7 @@
     <item
         android:id="@+id/bottom_nav_favorite"
         android:title="@string/favorite"
-        android:icon="@drawable/ic_baseline_favorite_white_24"/>
+        android:icon="@drawable/ic_baseline_favorite_accent_24"/>
     <item
         android:id="@+id/bottom_nav_playlist"
         android:title="@string/playlist"
