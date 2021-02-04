@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/navigation_drawer_settings"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:title="@string/settings"/>
-    <item android:id="@+id/navigation_drawer_tos_privacy"
-        android:icon="@drawable/ic_baseline_privacy_tip_24"
-        android:title="@string/tos_privacy"/>
     <item android:id="@+id/navigation_drawer_faq"
         android:icon="@drawable/ic_baseline_question_answer_24"
         android:title="@string/faq"/>
+    <item android:id="@+id/navigation_drawer_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings"/>
+    <item android:id="@+id/navigation_drawer_tos"
+        android:icon="@drawable/ic_baseline_privacy_tip_24"
+        android:title="@string/tos"/>
+    <item android:id="@+id/navigation_drawer_privacy"
+        android:icon="@drawable/ic_baseline_privacy_tip_24"
+        android:title="@string/privacy"/>
     <item android:id="@+id/navigation_drawer_contact"
+        android:icon="@drawable/ic_baseline_email_24"
         android:title="@string/contact"/>
     <item
         android:id="@+id/navigation_drawer_dark_mode"

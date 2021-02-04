@@ -76,6 +76,9 @@
     <string name="export_playlist">Export Playlist</string>
     <string name="export">EXPORT</string>
     <string name="select_path">Select Path:</string>
-
+    <string name="dev_mail">dev.appbroker@gmail.com</string>
+    <string name="send_mail">Send E-mail</string>
+    <string name="tos">TOS</string>
+    <string name="privacy">Privacy</string>
 
 </resources>

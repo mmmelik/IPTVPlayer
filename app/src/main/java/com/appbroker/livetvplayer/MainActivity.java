@@ -12,7 +12,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -133,6 +135,17 @@ public class MainActivity extends AppCompatActivity {
                     SwitchMaterial switchMaterial=item.getActionView().findViewById(R.id.nav_switch);
                     switchMaterial.setChecked(!ThemeUtil.isDarkMode(prefHelper));
                     return true;
+                }else if (id==R.id.navigation_drawer_contact){
+                    Intent intent=new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",getString(R.string.dev_mail),null));
+                    startActivity(Intent.createChooser(intent,getString(R.string.send_mail)));
+                }else if (id==R.id.navigation_drawer_tos){
+                    Intent intent=new Intent(MainActivity.this,PrivacyTOSActivity.class);
+                    intent.putExtra(Constants.ARGS_ACTIVITY_TYPE,Constants.TYPE_TOS);
+                    startActivity(intent);
+                }else if (id==R.id.navigation_drawer_privacy){
+                    Intent intent=new Intent(MainActivity.this,PrivacyTOSActivity.class);
+                    intent.putExtra(Constants.ARGS_ACTIVITY_TYPE,Constants.TYPE_PRIVACY);
+                    startActivity(intent);
                 }
                 drawerLayout.closeDrawers();
                 return true;
