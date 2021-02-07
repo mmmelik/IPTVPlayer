@@ -1,6 +1,7 @@
 package com.appbroker.livetvplayer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ThemeUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.text.Html;
 import android.widget.TextView;
 
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.PrefHelper;
+import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.io.IOException;
@@ -20,6 +23,7 @@ public class PrivacyTOSActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(ThemeUtil.getPrefTheme(new PrefHelper(this)));
         setContentView(R.layout.activity_privacy_tos);
         toolbar=findViewById(R.id.toolbar_tos_privacy);
         setSupportActionBar(toolbar);

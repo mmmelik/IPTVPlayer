@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IPTVPlayerLight"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PrivacyTOSActivity"></activity>
+        <activity android:name=".PrivacyTOSActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".CustomFilePickerActivity"
             android:label="@string/title_activity_custom_file_picker" />
