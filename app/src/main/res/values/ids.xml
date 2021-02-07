@@ -3,4 +3,6 @@
     <item name="fab_add_playlist_url" type="id" />
     <item name="fab_add_playlist_local" type="id" />
     <item name="fab_export_playlist" type="id" />
+    <item name="context_menu_edit" type="id"/>
+    <item name="context_menu_delete" type="id"/>
 </resources>

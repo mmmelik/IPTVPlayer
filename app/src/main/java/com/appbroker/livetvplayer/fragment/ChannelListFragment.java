@@ -1,9 +1,13 @@
 package com.appbroker.livetvplayer.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.adapter.ChannelListRecyclerViewAdapter;
+import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 
 public class ChannelListFragment extends Fragment {
@@ -29,6 +34,7 @@ public class ChannelListFragment extends Fragment {
         channelRecyclerView=view.findViewById(R.id.fragment_channel_recycler_view);
         channelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         channelRecyclerView.setAdapter(new ChannelListRecyclerViewAdapter(this,categoryId));
+        registerForContextMenu(channelRecyclerView);
     }
 
     @Nullable
@@ -37,4 +43,8 @@ public class ChannelListFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_channel_list,container,false);
     }
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
 }

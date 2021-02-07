@@ -33,6 +33,10 @@ public class Channel {
     public Channel() {
     }
 
+    public Channel(int id) {
+        this.id = id;
+    }
+
     @Ignore
     public Channel(int category_id, String name, Uri uri) {
         this.category_id = category_id;

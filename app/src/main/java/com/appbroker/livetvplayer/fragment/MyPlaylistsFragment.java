@@ -383,4 +383,16 @@ public class MyPlaylistsFragment extends Fragment{
         super.onPause();
     }
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int channelId=item.getGroupId();
+        Log.d("channel", String.valueOf(channelId));
+        if (item.getItemId()==R.id.context_menu_edit){
+            Log.d("channel","edit");
+        }else if(item.getItemId()==R.id.context_menu_delete){
+            Log.d("channel","delete");
+            channelViewModel.deleteChannel(new Channel(channelId));
+        }
+        return super.onContextItemSelected(item);
+    }
 }

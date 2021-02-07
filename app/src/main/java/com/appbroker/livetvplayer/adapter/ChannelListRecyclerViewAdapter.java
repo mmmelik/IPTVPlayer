@@ -1,7 +1,11 @@
 package com.appbroker.livetvplayer.adapter;
 
 import android.content.Intent;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -66,7 +70,7 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
         return channels.size();
     }
 
-    private class CustomViewHolder extends RecyclerView.ViewHolder{
+    private class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
         private CardView cardView;
         private TextView nameTextView;
         private TextView subTextView;
@@ -77,6 +81,7 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
             nameTextView=itemView.findViewById(R.id.fav_list_item_name);
             subTextView =itemView.findViewById(R.id.fav_list_item_sub_text);
             favImage=itemView.findViewById(R.id.fav_list_item_fav);
+            itemView.setOnCreateContextMenuListener(this);
         }
         public void bind(int position){
             Channel channel=channels.get(position);
@@ -113,6 +118,16 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
                 }
             });
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            Channel channel=channels.get(this.getAdapterPosition());
+            Log.d("pos", channel.getName());
+            menu.setHeaderTitle(channel.getName());
+            menu.add(channel.getId(),R.id.context_menu_edit,0,R.string.edit);
+            menu.add(channel.getId(),R.id.context_menu_delete,0,R.string.delete);
+        }
+
     }
 
 }

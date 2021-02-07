@@ -80,5 +80,7 @@
     <string name="send_mail">Send E-mail</string>
     <string name="tos">TOS</string>
     <string name="privacy">Privacy</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
 </resources>
