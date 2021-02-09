@@ -82,5 +82,6 @@
     <string name="privacy">Privacy</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="export_to">Export to:</string>
 
 </resources>

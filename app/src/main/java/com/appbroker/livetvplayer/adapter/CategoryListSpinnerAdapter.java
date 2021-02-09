@@ -1,6 +1,7 @@
 package com.appbroker.livetvplayer.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryListSpinnerAdapter extends BaseAdapter {
-    private final Fragment fragment;
+    private Fragment fragment;
     private List<Category> categoryList;
 
     public CategoryListSpinnerAdapter(Fragment fragment) {
@@ -28,6 +29,7 @@ public class CategoryListSpinnerAdapter extends BaseAdapter {
         categoryViewModel.getAllCategories().observe(fragment, new Observer<List<Category>>() {
             @Override
             public void onChanged(List<Category> categories) {
+                Log.d("update", String.valueOf(categories.size()));
                 CategoryListSpinnerAdapter.this.categoryList=categories;
                 CategoryListSpinnerAdapter.this.notifyDataSetChanged();
             }
@@ -51,10 +53,14 @@ public class CategoryListSpinnerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater layoutInflater=fragment.getLayoutInflater();
-        CheckedTextView checkedTextView= (CheckedTextView) layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item,parent,false);
-        checkedTextView.setText(categoryList.get(position).getName());
-        return checkedTextView;
+        if (convertView==null){
+            LayoutInflater layoutInflater=fragment.getLayoutInflater();
+            convertView=layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item,parent,false);
+        }
+
+       ((CheckedTextView) convertView).setText(categoryList.get(position).getName());
+
+        return convertView;
     }
 
 }

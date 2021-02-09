@@ -34,6 +34,7 @@ public class DialogUtils {
                 dialog.dismiss();
             }
         });
+        builder.setTitle(R.string.add_category);
         return builder.create();
     }
 }

@@ -2,6 +2,7 @@ package com.appbroker.livetvplayer.fragment;
 
 import android.Manifest;
 import android.app.SearchManager;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,11 +10,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -84,8 +85,7 @@ public class MyPlaylistsFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_my_playlists,container,false);
-        return view;
+        return inflater.inflate(R.layout.fragment_my_playlists,container,false);
     }
 
     @Override
@@ -147,6 +147,8 @@ public class MyPlaylistsFragment extends Fragment{
     }
 
     private void exportPlaylistFlow() {
+        ExportDialogFragment exportDialogFragment=new ExportDialogFragment();
+        exportDialogFragment.show(getChildFragmentManager(),Constants.TAG_EXPORT_DIALOG_FRAGMENT);
     }
 
     private void launchURLDialog() {
@@ -186,8 +188,9 @@ public class MyPlaylistsFragment extends Fragment{
 
     private String getClipboard(){
         ClipboardManager clipboard = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboard != null) {
-            return Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0).getText().toString();
+        ClipData clip;
+        if ((clip=clipboard.getPrimaryClip()) != null) {
+            return clip.getItemAt(0).getText().toString();
         }
         return "";
     }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
     <TextView
         android:layout_width="wrap_content"
@@ -11,20 +13,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/tabTextColor"/>
+        android:background="?attr/tabTextColor"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="5dp"/>
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/fragment_export_dialog_category_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="50dp"
+        tools:listitem="@android:layout/simple_spinner_dropdown_item"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="@string/select_path"/>
+        android:text="@string/export_to"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/tabTextColor"/>
+        android:background="?attr/tabTextColor"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:id="@+id/fragment_export_dialog_path_text"
         android:layout_width="match_parent"
@@ -32,5 +39,6 @@
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export"/>
+        android:text="@string/export"
+        android:textColor="?android:attr/textColor"/>
 </LinearLayout>
