@@ -51,12 +51,17 @@ public class ExportDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setTitle(R.string.export_playlist);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
 
     @Override
-    public int getTheme() {
-        return ThemeUtil.getPrefTheme(new PrefHelper(getContext()));
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog=getDialog();
+        if (dialog!=null){
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 }

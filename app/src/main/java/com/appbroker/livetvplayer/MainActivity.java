@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -44,7 +45,12 @@ import com.appbroker.livetvplayer.fragment.SearchFragment;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.util.ThemeUtil;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.BannerCallbacks;
+import com.appodeal.ads.BannerView;
+import com.appodeal.ads.utils.PermissionsHelper;
 import com.codemybrainsout.ratingdialog.RatingDialog;
+import com.explorestack.consent.Consent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -56,10 +62,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.startapp.sdk.ads.banner.Banner;
-import com.startapp.sdk.ads.banner.BannerListener;
-import com.startapp.sdk.adsbase.StartAppAd;
-import com.startapp.sdk.adsbase.StartAppSDK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,7 @@ import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout bannerFrame;
+    private BannerView appodealBanner;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private RelativeLayout contentFrameContainer;
@@ -366,9 +369,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     public void snackbar(String message){
         Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
     }
+
     private void adWorks() {
         if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
             MobileAds.initialize(this);
@@ -379,8 +384,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onAdFailedToLoad(LoadAdError loadAdError) {
                     Log.d("AdmobAdBanner",loadAdError.getMessage());
-                    loadStartAppBanner();
                     //todo:load mopub banner
+                    //loadAppodeal();
                 }
 
                 @Override
@@ -393,41 +398,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadStartAppBanner() {
-        StartAppSDK.init(this,Constants.STARTAPP_ID,false);
-        StartAppAd.disableSplash();
-        StartAppAd.disableAutoInterstitial();
-        StartAppSDK.setUserConsent (this,
-                "pas",
-                System.currentTimeMillis(),
-                true);
-        Banner banner=new Banner(this);
-        banner.setBannerListener(new BannerListener() {
-            @Override
-            public void onReceiveAd(View view) {
-                bannerFrame.addView(view);
-            }
-
-            @Override
-            public void onFailedToReceiveAd(View view) {
-                Log.d("StartAppAd","Failed to load Banner");
-
-            }
-
-            @Override
-            public void onImpression(View view) {
-                Log.d("StartAppAd","Impression Banner");
-            }
-
-            @Override
-            public void onClick(View view) {
-                Log.d("StartAppAd","Click Banner");
-            }
-        });
-        banner.loadAd();
+    private void loadAppodeal() {
+        //todo:consent
+        Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER,true);
+        Appodeal.setBannerViewId(R.id.appodeal_banner);
+        Appodeal.show(MainActivity.this,Appodeal.BANNER);
     }
-
-
 
 
     private synchronized void changeTheme(@StyleRes int id){
@@ -455,20 +431,11 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)){
             drawerLayout.closeDrawer(Gravity.LEFT);
+        }else if (myPlaylistsFragment.isVisible()&&myPlaylistsFragment.isFABOpen()){
+            myPlaylistsFragment.closeFAB();
         }else {
             if(!prefHelper.readBooleanPref(Constants.PREF_IS_RATED)){
-                RatingDialog ratingDialog=new RatingDialog.Builder(this)
-                        .threshold(4)
-                        .title(getResources().getString(R.string.how_was_your_experience))
-                        .positiveButtonText(getResources().getString(R.string.not_now))
-                        .negativeButtonText(getResources().getString(R.string.never))
-                        .formTitle(getResources().getString(R.string.submit))
-                        .formHint(getResources().getString(R.string.tell_us))
-                        .formSubmitText(getResources().getString(R.string.submit))
-                        .formCancelText(getResources().getString(R.string.cancel))
-                        .playstoreUrl(getResources().getString(R.string.app_url))
-                        .build();
-                ratingDialog.show();
+
                 prefHelper.writePref(Constants.PREF_IS_RATED,true);
             }else {
                 finish();

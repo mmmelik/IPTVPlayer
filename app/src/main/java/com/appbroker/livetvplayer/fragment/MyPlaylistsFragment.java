@@ -88,6 +88,14 @@ public class MyPlaylistsFragment extends Fragment{
         return inflater.inflate(R.layout.fragment_my_playlists,container,false);
     }
 
+    public boolean isFABOpen(){
+        return speedDialView.isOpen();
+    }
+    public void closeFAB(){
+        if (speedDialView.isOpen()){
+            speedDialView.close(true);
+        }
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         tabLayout=view.findViewById(R.id.fragment_playlist_tab_layout);

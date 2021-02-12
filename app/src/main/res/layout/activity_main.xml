@@ -41,6 +41,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/bottomNavigationView">
+                <com.appodeal.ads.BannerView
+                    android:id="@+id/appodeal_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </FrameLayout>
             <RelativeLayout
                 android:id="@+id/contentFrameContainer"
@@ -65,7 +69,4 @@
             app:menu="@menu/navigation_menu"
             app:headerLayout="@layout/nav_header"/>
     </androidx.drawerlayout.widget.DrawerLayout>
-
-
-
 </RelativeLayout>

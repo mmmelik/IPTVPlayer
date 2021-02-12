@@ -33,6 +33,7 @@ public class Channel {
     public Channel() {
     }
 
+    @Ignore
     public Channel(int id) {
         this.id = id;
     }

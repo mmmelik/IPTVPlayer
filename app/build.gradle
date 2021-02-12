@@ -42,16 +42,16 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     implementation "androidx.room:room-runtime:2.2.6"
     annotationProcessor "androidx.room:room-compiler:2.2.6"
-    implementation 'com.google.android.gms:play-services-ads:19.6.0'
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
     implementation 'com.google.android.gms:play-services-cast-framework:19.0.0'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation "com.leinardi.android:speed-dial:3.1.1"
     implementation 'com.codemybrainsout.rating:ratingdialog:1.0.8'
     implementation 'com.android.billingclient:billing:3.0.2'
-    implementation 'com.startapp:inapp-sdk:4.7.5'
     implementation 'com.lovedise:permissiongen:0.0.6'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.12.2'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.12.2'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.12.2'
     implementation 'commons-io:commons-io:2.6'
+    implementation 'com.appodeal.ads:sdk:2.9.0.0'
 }

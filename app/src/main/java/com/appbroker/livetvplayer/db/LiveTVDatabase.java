@@ -16,7 +16,7 @@ import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.StringUtils;
 
-@Database(entities = {Channel.class,Category.class}, version = 2)
+@Database(entities = {Channel.class,Category.class},exportSchema = false, version = 2)
 public abstract class LiveTVDatabase extends RoomDatabase {
     private static LiveTVDatabase instance;
 
@@ -40,8 +40,8 @@ public abstract class LiveTVDatabase extends RoomDatabase {
             new Thread(){
                 @Override
                 public void run() {
-                    instance.categoryDAO().addCategory(new Category("Test"));
-                    instance.channelDAO().addChannel(new Channel(1,"Test Channel", StringUtils.makeUri("https://ia902804.us.archive.org/7/items/BigBuckBunnyOfficialBlenderFoundationShortFilm720p30fps/Big%20Buck%20Bunny%20Official%20Blender%20Foundation%20Short%20Film%20720p%2030fps.mp4")));
+                    instance.categoryDAO().addCategory(new Category("Test Category"));
+                    instance.channelDAO().addChannel(new Channel(1,"Big Buck Bunny(Test Channel)", StringUtils.makeUri("https://ia902804.us.archive.org/7/items/BigBuckBunnyOfficialBlenderFoundationShortFilm720p30fps/Big%20Buck%20Bunny%20Official%20Blender%20Foundation%20Short%20Film%20720p%2030fps.mp4")));
                 }
             }.start();
         }

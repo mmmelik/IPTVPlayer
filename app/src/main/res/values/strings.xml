@@ -83,5 +83,6 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="export_to">Export to:</string>
+    <string name="content_desc_iptv_player_logo">IPTV player logo</string>
 
 </resources>

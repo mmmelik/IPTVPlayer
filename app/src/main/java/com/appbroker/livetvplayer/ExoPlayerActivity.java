@@ -1,5 +1,6 @@
 package com.appbroker.livetvplayer;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -21,7 +22,11 @@ import android.widget.TextView;
 import com.appbroker.livetvplayer.listener.DataBaseJobListener;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.InterstitialCallbacks;
+import com.appodeal.ads.api.App;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -32,6 +37,13 @@ import com.google.android.exoplayer2.extractor.mp4.Mp4Extractor;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,12 +61,16 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private boolean isPlaying=false;
     private boolean wasPlaying=false;
 
+    private PrefHelper prefHelper;
+    public InterstitialAd interstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        prefHelper=new PrefHelper(this);
         setContentView(R.layout.activity_exo_player);
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
@@ -98,6 +114,91 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             }
         });
         playerControllerTitle=playerView.findViewById(R.id.player_controller_title);
+        adworks();
+    }
+
+    private void adworks() {
+        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+            MobileAds.initialize(this);
+            AdRequest adRequest=new AdRequest.Builder().build();
+            InterstitialAd.load(this,Constants.ADMOB_INTERSTITIAL,adRequest,new InterstitialAdLoadCallback(){
+                @Override
+                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                    ExoPlayerActivity.this.interstitialAd=interstitialAd;
+                    ExoPlayerActivity.this.interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            Log.d("admob interstitial","failed to show "+adError.getMessage());
+                            super.onAdFailedToShowFullScreenContent(adError);
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            Log.d("admob interstitial","show");
+                            player.pause();
+                            super.onAdShowedFullScreenContent();
+                        }
+
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            Log.d("admob interstitial","closed");
+                            player.play();
+                            //todo:para iste.
+                            super.onAdDismissedFullScreenContent();
+                        }
+                    });
+                    ExoPlayerActivity.this.interstitialAd.show(ExoPlayerActivity.this);
+                }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    Appodeal.initialize(ExoPlayerActivity.this, Constants.APPODEAL_ID, Appodeal.INTERSTITIAL,true);
+                    Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+                        @Override
+                        public void onInterstitialLoaded(boolean b) {
+                            Log.d("appodeal","loaded");
+                            Appodeal.show(ExoPlayerActivity.this,Appodeal.INTERSTITIAL);
+                            Appodeal.destroy(Appodeal.INTERSTITIAL);
+                        }
+
+                        @Override
+                        public void onInterstitialFailedToLoad() {
+                            Log.d("appodeal","failed to load");
+                        }
+
+                        @Override
+                        public void onInterstitialShown() {
+                            player.pause();
+                            Log.d("appodeal","shown");
+                        }
+
+                        @Override
+                        public void onInterstitialShowFailed() {
+                            Log.d("appodeal","failed");
+                        }
+
+                        @Override
+                        public void onInterstitialClicked() {
+                            Log.d("appodeal","click");
+                        }
+
+                        @Override
+                        public void onInterstitialClosed() {
+                            Log.d("appodeal","close");
+                            player.play();
+                        }
+
+                        @Override
+                        public void onInterstitialExpired() {
+                            Log.d("appodeal","expired");
+                        }
+                    });
+                    Log.i("admob interstitial", loadAdError.getMessage());
+                    ExoPlayerActivity.this.interstitialAd=null;
+                }
+            });
+        }
+
     }
 
     private void channelUpdated(Channel channel) {
@@ -163,5 +264,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             cause = cause.getCause();
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
