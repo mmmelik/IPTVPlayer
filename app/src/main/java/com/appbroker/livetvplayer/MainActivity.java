@@ -49,7 +49,6 @@ import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.BannerView;
 import com.appodeal.ads.utils.PermissionsHelper;
-import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.explorestack.consent.Consent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
