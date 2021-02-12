@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void adWorks() {
-        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
+        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
             MobileAds.initialize(this);
             AdView admobBanner=new AdView(this);
             admobBanner.setAdSize(AdSize.SMART_BANNER);

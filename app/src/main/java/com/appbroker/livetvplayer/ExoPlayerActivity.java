@@ -118,7 +118,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     }
 
     private void adworks() {
-        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
             MobileAds.initialize(this);
             AdRequest adRequest=new AdRequest.Builder().build();
             InterstitialAd.load(this,Constants.ADMOB_INTERSTITIAL,adRequest,new InterstitialAdLoadCallback(){
