@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IPTVPlayer</string>
+    <string name="app_name">Micro IPTV Player</string>
     <string name="app_url" translatable="false">https://play.google.com/store/apps/details?id=com.appbroker.livetvplayer</string>
     <string name="load_remote_playlist">Load Remote Playlist</string>
     <string name="load_local_playlist">Load Local Playlist</string>
@@ -49,7 +49,6 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="video">Video</string>
