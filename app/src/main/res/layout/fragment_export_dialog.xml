@@ -36,7 +36,8 @@
         android:id="@+id/fragment_export_dialog_path_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <com.google.android.material.button.MaterialButton
+    <Button
+        android:id="@+id/fragment_export_dialog_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/export"

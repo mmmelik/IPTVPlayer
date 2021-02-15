@@ -83,5 +83,18 @@
     <string name="delete">Delete</string>
     <string name="export_to">Export to:</string>
     <string name="content_desc_iptv_player_logo">IPTV player logo</string>
+    <string name="account_status">Account Status</string>
+    <string name="free">Free</string>
+    <string name="premium">Premium - No Ads</string>
+    <string name="delete_channel_are_you_sure">You are about to delete this channel. Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="channel_deleted">Channel deleted successfully.</string>
+    <string name="edit_channel">Edit Channel</string>
+    <string name="channel_url">Channel URL</string>
+    <string name="share_playlist">Share Playlist</string>
+    <string name="want_to_share">Would you like to share the playlist you have created?</string>
+    <string name="see">see</string>
+    <string name="close">close</string>
+    <string name="share">share</string>
 
 </resources>

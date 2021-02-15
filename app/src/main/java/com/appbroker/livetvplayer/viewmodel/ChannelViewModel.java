@@ -42,8 +42,8 @@ public class ChannelViewModel extends AndroidViewModel {
         channelService.addChannel(channel);
     }
 
-    public void deleteChannel(Channel channel){
-        channelService.deleteChannel(channel);
+    public void deleteChannel(int id){
+        channelService.deleteChannel(id);
     }
 
     public void updateChannel(Channel channel){

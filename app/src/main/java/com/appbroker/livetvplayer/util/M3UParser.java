@@ -1,10 +1,7 @@
 package com.appbroker.livetvplayer.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.appbroker.livetvplayer.R;
@@ -13,17 +10,14 @@ import com.appbroker.livetvplayer.model.Channel;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.StringReader;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import com.appbroker.livetvplayer.listener.ParserListener;
@@ -133,7 +127,7 @@ public class M3UParser {
                                 channels.add(new Channel(Constants.CATEGORY_ID_TEMP,"",Uri.parse(url)));
                                 parserListener.onFinish(Enums.ParseResult.REQUIRE_NAME,channels,response.statusMessage());
                                 break;
-                            }else if (response.contentType().startsWith("text/")||response.contentType().contains("mpegurl")){
+                            }else if (response.contentType().startsWith("text/")||response.contentType().contains("mpegurl")||response.contentType().startsWith("application/octet-stream")){
                                 String s=response.body();
                                 if(!s.contains("#EXTM3U")){
                                     List<Channel> channels=new ArrayList<>();
@@ -150,8 +144,24 @@ public class M3UParser {
                                     }
                                 }
                                 break;
+                            }else {
+                                String s=response.body();
+                                if(!s.startsWith("#EXTM3U")){
+                                    List<Channel> channels=new ArrayList<>();
+                                    channels.add(new Channel(Constants.CATEGORY_ID_TEMP,"",Uri.parse(url)));
+                                    parserListener.onFinish(Enums.ParseResult.SUCCESS,channels,response.statusMessage());
+                                }else {
+                                    try {
+                                        List<Channel> channels=parseString(s);
+                                        parserListener.onFinish(Enums.ParseResult.SUCCESS,channels,response.statusMessage());
+                                    }catch (Exception e){
+                                        List<Channel> channels=new ArrayList<>();
+                                        channels.add(new Channel(Constants.CATEGORY_ID_TEMP,"",Uri.parse(url)));
+                                        parserListener.onFinish(Enums.ParseResult.REQUIRE_NAME,channels,response.statusMessage());
+                                    }
+                                }
+                                break;
                             }
-                            break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -185,16 +195,36 @@ public class M3UParser {
         }
         return channels;
     }
-    public String generateM3UPlaylist(List<Channel> channels){
-        StringBuilder stringBuilder=new StringBuilder();
-        stringBuilder.append("#EXTM3U\n");
-        for (Channel channel:channels){
-            stringBuilder
-                    .append("#EXTINF:-1,")
-                    .append(channel.getName())
-                    .append("\n")
-                    .append(channel.getUri());
-        }
-        return stringBuilder.toString();
+
+    public void generateM3UPlaylist(String name,List<Channel> channels,File targetDir,ParserListener parserListener){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    File file=new File(targetDir,name+".m3u");
+                    if (file.createNewFile()) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append("#EXTM3U\n");
+                        for (Channel channel : channels) {
+                            stringBuilder
+                                    .append("#EXTINF:-1,")
+                                    .append(channel.getName())
+                                    .append("\n")
+                                    .append(channel.getUri().getPath())
+                                    .append("\n");
+                        }
+                        PrintStream printStream = new PrintStream(file);
+                        printStream.print(stringBuilder.toString());
+                        printStream.close();
+                        parserListener.onCreateFile(file);
+                    }else {
+                        parserListener.onError(new Exception("Target file already exist."));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    parserListener.onError(e);
+                }
+            }
+        }.start();
     }
 }

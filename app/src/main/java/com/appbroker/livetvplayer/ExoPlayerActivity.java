@@ -47,13 +47,14 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Random;
 
 public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener {
     private int channelId;
     private ChannelViewModel channelViewModel;
     private SimpleExoPlayer player;
-    private RelativeLayout customController;
     private ImageView favIcon;
     private TextView playerControllerTitle;
 
@@ -62,7 +63,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private boolean wasPlaying=false;
 
     private PrefHelper prefHelper;
-    public InterstitialAd interstitialAd;
 
 
     @Override
@@ -119,86 +119,53 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     private void adworks() {
         if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
-            MobileAds.initialize(this);
-            AdRequest adRequest=new AdRequest.Builder().build();
-            InterstitialAd.load(this,Constants.ADMOB_INTERSTITIAL,adRequest,new InterstitialAdLoadCallback(){
-                @Override
-                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                    ExoPlayerActivity.this.interstitialAd=interstitialAd;
-                    ExoPlayerActivity.this.interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(AdError adError) {
-                            Log.d("admob interstitial","failed to show "+adError.getMessage());
-                            super.onAdFailedToShowFullScreenContent(adError);
-                        }
+            Log.d("networks", Arrays.toString(Appodeal.getNetworks(ExoPlayerActivity.this,Appodeal.INTERSTITIAL).toArray()));
+            Random random=new Random();
+            int i=random.nextInt(100);
+            if(i<=40){
+                return;
+            }
 
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            Log.d("admob interstitial","show");
-                            player.pause();
-                            super.onAdShowedFullScreenContent();
-                        }
+            if (Appodeal.canShow(Appodeal.INTERSTITIAL)){
+                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+                    @Override
+                    public void onInterstitialLoaded(boolean b) {
 
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            Log.d("admob interstitial","closed");
-                            player.play();
-                            //todo:para iste.
-                            super.onAdDismissedFullScreenContent();
-                        }
-                    });
-                    ExoPlayerActivity.this.interstitialAd.show(ExoPlayerActivity.this);
-                }
+                    }
 
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    Appodeal.initialize(ExoPlayerActivity.this, Constants.APPODEAL_ID, Appodeal.INTERSTITIAL,true);
-                    Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
-                        @Override
-                        public void onInterstitialLoaded(boolean b) {
-                            Log.d("appodeal","loaded");
-                            Appodeal.show(ExoPlayerActivity.this,Appodeal.INTERSTITIAL);
-                            Appodeal.destroy(Appodeal.INTERSTITIAL);
-                        }
+                    @Override
+                    public void onInterstitialFailedToLoad() {
 
-                        @Override
-                        public void onInterstitialFailedToLoad() {
-                            Log.d("appodeal","failed to load");
-                        }
+                    }
 
-                        @Override
-                        public void onInterstitialShown() {
-                            player.pause();
-                            Log.d("appodeal","shown");
-                        }
+                    @Override
+                    public void onInterstitialShown() {
+                        player.pause();
+                    }
 
-                        @Override
-                        public void onInterstitialShowFailed() {
-                            Log.d("appodeal","failed");
-                        }
+                    @Override
+                    public void onInterstitialShowFailed() {
 
-                        @Override
-                        public void onInterstitialClicked() {
-                            Log.d("appodeal","click");
-                        }
+                    }
 
-                        @Override
-                        public void onInterstitialClosed() {
-                            Log.d("appodeal","close");
-                            player.play();
-                        }
+                    @Override
+                    public void onInterstitialClicked() {
 
-                        @Override
-                        public void onInterstitialExpired() {
-                            Log.d("appodeal","expired");
-                        }
-                    });
-                    Log.i("admob interstitial", loadAdError.getMessage());
-                    ExoPlayerActivity.this.interstitialAd=null;
-                }
-            });
+                    }
+
+                    @Override
+                    public void onInterstitialClosed() {
+                        player.play();
+                    }
+
+                    @Override
+                    public void onInterstitialExpired() {
+
+                    }
+                });
+                Appodeal.show(ExoPlayerActivity.this,Appodeal.INTERSTITIAL);
+            }
         }
-
     }
 
     private void channelUpdated(Channel channel) {
@@ -242,6 +209,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
+        Log.d("exo_error",error.getMessage());
         if (isBehindLiveWindow(error)) {
             // Re-initialize player at the live edge.
             Log.d("Exoplayer","lagging behind.");
@@ -249,6 +217,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             player.play();
         } else {
             // Handle other errors
+           error.printStackTrace();
         }
     }
 
@@ -268,6 +237,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     @Override
     public void onBackPressed() {
+        startActivity(new Intent(ExoPlayerActivity.this,MainActivity.class));
         super.onBackPressed();
     }
 }

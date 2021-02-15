@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -48,8 +46,6 @@ import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.BannerView;
-import com.appodeal.ads.utils.PermissionsHelper;
-import com.explorestack.consent.Consent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -70,7 +66,6 @@ import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout bannerFrame;
-    private BannerView appodealBanner;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private RelativeLayout contentFrameContainer;
@@ -99,6 +94,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initiateViews();
+    }
+
+    private void checkPremium() {
+        if(prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+            navigationView.getMenu().findItem(R.id.navigation_drawer_account_status).setIcon(R.drawable.ic_baseline_stars_24);
+            navigationView.getMenu().findItem(R.id.navigation_drawer_account_status).setTitle(R.string.premium);
+        }else {
+            navigationView.getMenu().findItem(R.id.navigation_drawer_account_status).setIcon(R.drawable.ic_baseline_block_24);
+            navigationView.getMenu().findItem(R.id.navigation_drawer_account_status).setTitle(R.string.free);
+        }
 
     }
 
@@ -109,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(materialToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerLayout=findViewById(R.id.drawer_layout);
-        NavigationView navigationView=findViewById(R.id.navigation_view);
+        navigationView=findViewById(R.id.navigation_view);
         actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,materialToolbar,R.string.open_drawer,R.string.close_drawer);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -126,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        checkPremium();
 
         actionBarDrawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -148,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent=new Intent(MainActivity.this,PrivacyTOSActivity.class);
                     intent.putExtra(Constants.ARGS_ACTIVITY_TYPE,Constants.TYPE_PRIVACY);
                     startActivity(intent);
+                }else if (id==R.id.navigation_drawer_account_status){
+                    if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+                        removeAdsButton();
+                    }
                 }
                 drawerLayout.closeDrawers();
                 return true;
@@ -158,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         bannerFrame =findViewById(R.id.bannerFrame);
+        bannerFrame.bringToFront();
         rootLayout=findViewById(R.id.rootLayout);
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -291,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
     private void handlePurchase(Purchase purchase) {
         if (purchase.getSku().equals(SKU_REMOVE_ADS)){
             if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED){
+                Log.d("removeads","purchased");
+                checkPremium();
                 if(!purchase.isAcknowledged()){
                     AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                             .setPurchaseToken(purchase.getPurchaseToken())
@@ -304,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 removeAds();
             }else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING){
+                Log.d("removeads","pending");
                 AlertDialog alertDialog=new AlertDialog.Builder(this)
                         .setTitle(R.string.pending_recent_purchase)
                         .setMessage(R.string.pending_purchase_message)
@@ -375,34 +389,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void adWorks() {
         if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
-            MobileAds.initialize(this);
-            AdView admobBanner=new AdView(this);
-            admobBanner.setAdSize(AdSize.SMART_BANNER);
-            admobBanner.setAdUnitId(Constants.ADMOB_BANNER);//todo:remove test
-            admobBanner.setAdListener(new AdListener(){
+            Appodeal.disableLocationPermissionCheck();
+            Appodeal.setBannerViewId(R.id.appodeal_banner);
+            Appodeal.setBannerCallbacks(new BannerCallbacks() {
                 @Override
-                public void onAdFailedToLoad(LoadAdError loadAdError) {
-                    Log.d("AdmobAdBanner",loadAdError.getMessage());
-                    //todo:load mopub banner
-                    //loadAppodeal();
+                public void onBannerLoaded(int i, boolean b) {
+                    Log.d("banner", String.valueOf(i));
+                    bannerFrame.removeAllViews();
+                    bannerFrame.addView(Appodeal.getBannerView(MainActivity.this));
                 }
 
                 @Override
-                public void onAdLoaded() {
-                    bannerFrame.addView(admobBanner);
+                public void onBannerFailedToLoad() {
+                    Log.d("banner","failed to load");
                 }
 
+                @Override
+                public void onBannerShown() {
+                    Log.d("banner","show");
+
+                }
+
+                @Override
+                public void onBannerShowFailed() {
+                    Log.d("banner","show failed");
+                }
+
+                @Override
+                public void onBannerClicked() {
+                    Log.d("banner","clicked");
+                }
+
+                @Override
+                public void onBannerExpired() {
+                    Log.d("banner","expired");
+                }
             });
-            admobBanner.loadAd(new AdRequest.Builder().build());
+            Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER,true);
+            Appodeal.show(MainActivity.this,Appodeal.BANNER_VIEW);
         }
     }
 
-    private void loadAppodeal() {
-        //todo:consent
-        Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER,true);
-        Appodeal.setBannerViewId(R.id.appodeal_banner);
-        Appodeal.show(MainActivity.this,Appodeal.BANNER);
-    }
 
 
     private synchronized void changeTheme(@StyleRes int id){

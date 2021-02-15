@@ -104,6 +104,7 @@ public class SearchFragment extends Fragment {
     }
 
     public void updateQuery(String query){
+        //todo:searh channels in database
         lastQuery=query;
         if (searchListRecyclerAdapter!=null){
             List<Channel> list=filterList(query);

@@ -130,4 +130,7 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
 
     }
 
+    public List<Channel> getChannels() {
+        return channels;
+    }
 }

@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -47,6 +48,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -303,6 +306,11 @@ public class MyPlaylistsFragment extends Fragment{
             }
 
             @Override
+            public void onCreateFile(File f) {
+                //empty
+            }
+
+            @Override
             public void onError(Exception e) {
                 Log.d("error",e.getMessage());
             }
@@ -400,9 +408,10 @@ public class MyPlaylistsFragment extends Fragment{
         Log.d("channel", String.valueOf(channelId));
         if (item.getItemId()==R.id.context_menu_edit){
             Log.d("channel","edit");
+            DialogUtils.showEditChannelDialog((MainActivity)getActivity(),channelId);
         }else if(item.getItemId()==R.id.context_menu_delete){
             Log.d("channel","delete");
-            channelViewModel.deleteChannel(new Channel(channelId));
+            DialogUtils.deleteChannelDialog((MainActivity)getActivity(),channelId).show();
         }
         return super.onContextItemSelected(item);
     }

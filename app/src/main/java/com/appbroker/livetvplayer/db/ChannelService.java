@@ -39,10 +39,12 @@ public class ChannelService {
             }
         }.start();
     }
-    public void deleteChannel(Channel channel){
+    public void deleteChannel(int id){
         new Thread(){
             @Override
             public void run() {
+                Channel channel=new Channel();
+                channel.setId(id);
                 channelDAO.deleteChannel(channel);
             }
         }.start();
