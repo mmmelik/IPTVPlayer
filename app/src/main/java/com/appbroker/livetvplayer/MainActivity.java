@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -46,6 +47,7 @@ import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.BannerView;
+import com.appodeal.ads.api.App;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -65,7 +67,6 @@ import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FrameLayout bannerFrame;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private RelativeLayout contentFrameContainer;
@@ -165,10 +166,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-        bannerFrame =findViewById(R.id.bannerFrame);
-        bannerFrame.bringToFront();
         rootLayout=findViewById(R.id.rootLayout);
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -337,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void removeAds() {
         prefHelper.writePref(Constants.PREF_IS_PREMIUM,true);
-        bannerFrame.removeAllViews();
+        Appodeal.destroy(Appodeal.BANNER_VIEW);
     }
     private void checkPurchases() {
         Log.d("checkpurchase", "here");
@@ -389,14 +386,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void adWorks() {
         if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
+            Appodeal.setTesting(BuildConfig.DEBUG);
             Appodeal.disableLocationPermissionCheck();
             Appodeal.setBannerViewId(R.id.appodeal_banner);
             Appodeal.setBannerCallbacks(new BannerCallbacks() {
                 @Override
                 public void onBannerLoaded(int i, boolean b) {
                     Log.d("banner", String.valueOf(i));
-                    bannerFrame.removeAllViews();
-                    bannerFrame.addView(Appodeal.getBannerView(MainActivity.this));
                 }
 
                 @Override
@@ -425,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("banner","expired");
                 }
             });
-            Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER,true);
+            Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER|Appodeal.INTERSTITIAL,true);
             Appodeal.show(MainActivity.this,Appodeal.BANNER_VIEW);
         }
     }

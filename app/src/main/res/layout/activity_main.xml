@@ -36,21 +36,16 @@
                 android:layout_alignParentBottom="true"
                 app:menu="@menu/bottom_nav_menu"
                 android:theme="?attr/bottomNavigationTheme"/>
-            <FrameLayout
-                android:id="@+id/bannerFrame"
+            <com.appodeal.ads.BannerView
+                android:layout_above="@id/bottomNavigationView"
+                android:id="@+id/appodeal_banner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/bottomNavigationView">
-                <com.appodeal.ads.BannerView
-                    android:id="@+id/appodeal_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
+                android:layout_height="wrap_content"/>
             <RelativeLayout
                 android:id="@+id/contentFrameContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/bannerFrame">
+                android:layout_above="@id/appodeal_banner">
                 <FrameLayout
                     android:id="@+id/search_frame"
                     android:layout_width="match_parent"

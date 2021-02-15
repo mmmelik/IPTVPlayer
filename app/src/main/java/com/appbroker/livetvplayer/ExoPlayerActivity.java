@@ -120,47 +120,45 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private void adworks() {
         if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
             Log.d("networks", Arrays.toString(Appodeal.getNetworks(ExoPlayerActivity.this,Appodeal.INTERSTITIAL).toArray()));
-            Random random=new Random();
-            int i=random.nextInt(100);
-            if(i<=40){
-                return;
-            }
 
             if (Appodeal.canShow(Appodeal.INTERSTITIAL)){
                 Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
                     @Override
                     public void onInterstitialLoaded(boolean b) {
-
+                        Log.d("appodeal","loaded");
                     }
 
                     @Override
                     public void onInterstitialFailedToLoad() {
-
+                        Log.d("appodeal","failed to load");
                     }
 
                     @Override
                     public void onInterstitialShown() {
                         player.pause();
+                        Log.d("appodeal","show");
                     }
 
                     @Override
                     public void onInterstitialShowFailed() {
-
+                        Log.d("appodeal","failed to show");
                     }
 
                     @Override
                     public void onInterstitialClicked() {
-
+                        Log.d("appodeal","click");
                     }
 
                     @Override
                     public void onInterstitialClosed() {
                         player.play();
+                        Appodeal.destroy(Appodeal.INTERSTITIAL);
+                        Log.d("appodeal","closed");
                     }
 
                     @Override
                     public void onInterstitialExpired() {
-
+                        Log.d("appodeal","expired");
                     }
                 });
                 Appodeal.show(ExoPlayerActivity.this,Appodeal.INTERSTITIAL);
@@ -237,7 +235,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(ExoPlayerActivity.this,MainActivity.class));
         super.onBackPressed();
     }
 }
