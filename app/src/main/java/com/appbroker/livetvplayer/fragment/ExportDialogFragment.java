@@ -1,5 +1,6 @@
 package com.appbroker.livetvplayer.fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.adapter.CategoryListSpinnerAdapter;
 import com.appbroker.livetvplayer.listener.ParserListener;
@@ -36,6 +38,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
+
 public class ExportDialogFragment extends DialogFragment {
     private CategoryViewModel categoryViewModel;
     private ChannelViewModel channelViewModel;
@@ -45,6 +51,11 @@ public class ExportDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        PermissionGen.with(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .addRequestCode(101)
+                .request();
+
         AppCompatActivity activity= (AppCompatActivity) context;
         channelViewModel=new ViewModelProvider(activity, ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication())).get(ChannelViewModel.class);
     }
@@ -108,6 +119,49 @@ public class ExportDialogFragment extends DialogFragment {
         });
 
     }
+    @PermissionSuccess(requestCode = 101)
+    public void  onSuccessRead(){
+        PermissionGen.with(this)
+                .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .addRequestCode(102)
+                .request();
+    }
+
+    @PermissionFail(requestCode = 101)
+    public void onFailReadPermission(){
+        final MainActivity activity= (MainActivity) getActivity();
+        ((MainActivity)getActivity()).snackbar(getString(R.string.storage_permission_required), getString(R.string.grant), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionGen.with(activity)
+                        .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .addRequestCode(101)
+                        .request();
+            }
+        });
+        dismiss();
+    }
+
+    @PermissionFail(requestCode = 102)
+    public void onFailWritePermission(){
+        final MainActivity activity= (MainActivity) getActivity();
+        ((MainActivity)getActivity()).snackbar(getString(R.string.storage_permission_required), getString(R.string.grant), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionGen.with(activity)
+                        .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .addRequestCode(102)
+                        .request();
+            }
+        });
+        dismiss();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+    }
 
     @Nullable
     @Override
@@ -132,4 +186,5 @@ public class ExportDialogFragment extends DialogFragment {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
+
 }

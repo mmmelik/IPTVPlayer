@@ -1,5 +1,8 @@
 package com.appbroker.livetvplayer.fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.adapter.ChannelListRecyclerViewAdapter;
 import com.appbroker.livetvplayer.listener.ParserListener;
@@ -26,6 +30,10 @@ import com.appbroker.livetvplayer.util.M3UParser;
 import java.io.File;
 import java.util.List;
 import java.util.Random;
+
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
 
 public class FavoriteFragment extends Fragment {
     ChannelListRecyclerViewAdapter channelListRecyclerViewAdapter;
@@ -59,36 +67,66 @@ public class FavoriteFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId()==R.id.fragment_favorite_export_action){
-            M3UParser m3UParser=new M3UParser(getContext());
-            File dir=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()+File.separator+"MicroPlaylists");
-            if (!dir.exists()){
-                dir.mkdir();
-            }
-            m3UParser.generateM3UPlaylist("favorites_" + new Random().nextInt(100), channelListRecyclerViewAdapter.getChannels(), dir, new ParserListener() {
-                @Override
-                public void onFinish(Enums.ParseResult parseResult, List<Channel> channelList, String message) {
-                    //empty
-                }
-
-                @Override
-                public void onCreateFile(File f) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialogUtils.showShareDialog(getActivity(),f);
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    //todo:show
-                }
-            });
+            PermissionGen.with(FavoriteFragment.this)
+                    .addRequestCode(101)
+                    .permissions(Manifest.permission.READ_EXTERNAL_STORAGE).request();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @PermissionSuccess(requestCode = 101)
+    public void onSuccessRead(){
+        PermissionGen.with(FavoriteFragment.this)
+                .addRequestCode(102)
+                .permissions(Manifest.permission.WRITE_EXTERNAL_STORAGE).request();
+    }
+    @PermissionSuccess(requestCode = 102)
+    public void onSuccessWrite(){
+        proceedToParse();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+    }
+
+
+    private void proceedToParse(){
+        if (Build.VERSION.SDK_INT>=23){
+            if (getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            || getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                ((MainActivity)getActivity()).snackbar(getString(R.string.storage_permission_required),null,null);
+                return;
+            }
+
+        }
+        M3UParser m3UParser=new M3UParser(getContext());
+        File dir=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()+File.separator+"MicroPlaylists");
+        if (!dir.exists()){
+            dir.mkdir();
+        }
+        m3UParser.generateM3UPlaylist("favorites_" + new Random().nextInt(100), channelListRecyclerViewAdapter.getChannels(), dir, new ParserListener() {
+            @Override
+            public void onFinish(Enums.ParseResult parseResult, List<Channel> channelList, String message) {
+                //empty
+            }
+
+            @Override
+            public void onCreateFile(File f) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DialogUtils.showShareDialog(getActivity(),f);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                //todo:show
+            }
+        });
+    }
 
 }

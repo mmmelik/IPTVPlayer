@@ -63,7 +63,8 @@ public class DialogUtils {
             public void onClick(DialogInterface dialog, int which) {
                 ChannelViewModel channelViewModel=new ViewModelProvider(activity, ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication())).get(ChannelViewModel.class);
                 channelViewModel.deleteChannel(id);
-                ((MainActivity)activity).snackbar(activity.getString(R.string.channel_deleted));
+                ((MainActivity)activity).snackbar(activity.getString(R.string.channel_deleted),null,null);
+                //todo:add undo delete
                 dialog.dismiss();
             }
         });
@@ -128,7 +129,7 @@ public class DialogUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent=new Intent(Intent.ACTION_SEND);
-                intent.setType("text/*");
+                intent.setType("application/x-mpegurl");
                 intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
                 context.startActivity(Intent.createChooser(intent,context.getString(R.string.share_playlist)));
             }

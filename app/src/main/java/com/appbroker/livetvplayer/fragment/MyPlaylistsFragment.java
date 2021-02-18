@@ -241,7 +241,14 @@ public class MyPlaylistsFragment extends Fragment{
     @Keep
     @PermissionFail(requestCode = 100)
     private void onStorageRequestFail(){
-        ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.storage_permission_required));
+        ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.storage_permission_required), getString(R.string.grant), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionGen.with(getActivity())
+                        .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .request();
+            }
+        });
     }
 
     @Override
@@ -258,10 +265,10 @@ public class MyPlaylistsFragment extends Fragment{
                     Log.d("pick",uri.toString());
                     handleFileSelect(uri.toString(),true);
                 }else {
-                    ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.unknown_error));
+                    ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.unknown_error),null,null);
                 }
             }else if (requestCode==RESULT_CANCELED){
-                ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.file_pick_canceled));
+                ((MainActivity)getActivity()).snackbar(getResources().getString(R.string.file_pick_canceled),null,null);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

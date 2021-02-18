@@ -255,23 +255,28 @@ public class MainActivity extends AppCompatActivity {
                     for (Purchase purchase : list){
                         handlePurchase(purchase);
                     }
-                    snackbar(getString(R.string.purchase_successful));
+                    snackbar(getString(R.string.purchase_successful),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED){
-                    snackbar(getString(R.string.purchase_canceled));
+                    snackbar(getString(R.string.purchase_canceled), getString(R.string.undo), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            removeAdsButton();
+                        }
+                    });
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE){
-                    snackbar(getString(R.string.service_unavailable));
+                    snackbar(getString(R.string.service_unavailable),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE){
-                    snackbar(getString(R.string.billing_unavailable));
+                    snackbar(getString(R.string.billing_unavailable),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_UNAVAILABLE){
-                    snackbar(getString(R.string.product_unavailable));
+                    snackbar(getString(R.string.product_unavailable),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.DEVELOPER_ERROR){
-                    snackbar(getString(R.string.developer_error));
+                    snackbar(getString(R.string.developer_error),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ERROR){
-                    snackbar(getString(R.string.error));
+                    snackbar(getString(R.string.error),null,null);
                 }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED){
-                    snackbar(getString(R.string.product_already_owned));
+                    snackbar(getString(R.string.product_already_owned),null,null);
                 }else{
-                    snackbar(getString(R.string.unknown_error));
+                    snackbar(getString(R.string.unknown_error),null,null);
                 }
                 Log.d("response", String.valueOf(billingResult.getResponseCode()));
             }
@@ -371,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        snackbar(getResources().getString(R.string.unknown_error));
+                        snackbar(getResources().getString(R.string.unknown_error),null,null);
                         Log.d("skuDetail", "list null");
                     }
                 }
@@ -380,8 +385,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void snackbar(String message){
-        Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
+    public void snackbar(String message, String actionLabel, View.OnClickListener onClickListener){
+        if (actionLabel!=null){
+            Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).setAction(actionLabel,onClickListener).show();
+        }else {
+            Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).show();
+        }
+
     }
 
     private void adWorks() {
