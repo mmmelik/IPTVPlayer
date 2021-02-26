@@ -1,7 +1,6 @@
 package com.appbroker.livetvplayer;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ThemeUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +32,7 @@ public class PrivacyTOSActivity extends AppCompatActivity {
         Intent intent=getIntent();
         String type=intent.getStringExtra(Constants.ARGS_ACTIVITY_TYPE);
         if(Constants.TYPE_TOS.equals(type)){
-            loadType();
+            loadTOS();
         }else if (Constants.TYPE_PRIVACY.equals(type)){
             loadPrivacy();
         }
@@ -55,7 +54,7 @@ public class PrivacyTOSActivity extends AppCompatActivity {
 
     }
 
-    private void loadType() {
+    private void loadTOS() {
         try {
             getSupportActionBar().setTitle(R.string.tos);
             InputStream inputStream=getAssets().open("tos.html");
