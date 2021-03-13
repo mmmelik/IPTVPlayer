@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void adWorks() {
-        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
+        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
             Appodeal.setTesting(BuildConfig.DEBUG);
             Appodeal.disableLocationPermissionCheck();
             Appodeal.setBannerViewId(R.id.appodeal_banner);

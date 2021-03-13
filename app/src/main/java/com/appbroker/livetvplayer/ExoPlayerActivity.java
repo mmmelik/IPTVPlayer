@@ -30,6 +30,7 @@ import com.appodeal.ads.api.App;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.flv.FlvExtractor;
@@ -118,7 +119,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     }
 
     private void adworks() {
-        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
             Log.d("networks", Arrays.toString(Appodeal.getNetworks(ExoPlayerActivity.this,Appodeal.INTERSTITIAL).toArray()));
 
             if (Appodeal.canShow(Appodeal.INTERSTITIAL)){
