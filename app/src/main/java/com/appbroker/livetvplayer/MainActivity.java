@@ -15,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -44,16 +42,12 @@ import com.appbroker.livetvplayer.fragment.SearchFragment;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.util.ThemeUtil;
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.BannerCallbacks;
-import com.appodeal.ads.BannerView;
-import com.appodeal.ads.api.App;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -62,11 +56,13 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AdView banner;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private RelativeLayout contentFrameContainer;
@@ -95,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initiateViews();
+
     }
 
     private void checkPremium() {
@@ -109,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateViews() {
+        banner =findViewById(R.id.banner);
         contentFrameContainer=findViewById(R.id.contentFrameContainer);
         rootContainer=findViewById(R.id.rootContainer);
         materialToolbar=findViewById(R.id.toolbar);
@@ -339,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void removeAds() {
         prefHelper.writePref(Constants.PREF_IS_PREMIUM,true);
-        Appodeal.destroy(Appodeal.BANNER_VIEW);
+        banner.setVisibility(View.GONE);
     }
     private void checkPurchases() {
         Log.d("checkpurchase", "here");
@@ -396,43 +394,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void adWorks() {
         if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
-            Appodeal.setTesting(BuildConfig.DEBUG);
-            Appodeal.disableLocationPermissionCheck();
-            Appodeal.setBannerViewId(R.id.appodeal_banner);
-            Appodeal.setBannerCallbacks(new BannerCallbacks() {
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
-                public void onBannerLoaded(int i, boolean b) {
-                    Log.d("banner", String.valueOf(i));
-                }
-
-                @Override
-                public void onBannerFailedToLoad() {
-                    Log.d("banner","failed to load");
-                }
-
-                @Override
-                public void onBannerShown() {
-                    Log.d("banner","show");
-
-                }
-
-                @Override
-                public void onBannerShowFailed() {
-                    Log.d("banner","show failed");
-                }
-
-                @Override
-                public void onBannerClicked() {
-                    Log.d("banner","clicked");
-                }
-
-                @Override
-                public void onBannerExpired() {
-                    Log.d("banner","expired");
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                    Map<String, AdapterStatus> map=initializationStatus.getAdapterStatusMap();
+                    for (String key:map.keySet()){
+                        AdapterStatus adapterStatus=map.get(key);
+                        Log.d("Ad Network Init",key+":"+adapterStatus.getDescription());
+                    }
                 }
             });
-            Appodeal.initialize(this, Constants.APPODEAL_ID, Appodeal.BANNER|Appodeal.INTERSTITIAL,true);
-            Appodeal.show(MainActivity.this,Appodeal.BANNER_VIEW);
+            banner.setAdUnitId(Constants.ADMOB_BANNER);
+            AdRequest adRequest=new AdRequest.Builder().build();
+            banner.loadAd(adRequest);
         }
     }
 
