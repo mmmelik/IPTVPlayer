@@ -16,6 +16,7 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,14 +24,18 @@ import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.InterstitialCallbacks;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,6 +49,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private SimpleExoPlayer player;
     private ImageView favIcon;
     private TextView playerControllerTitle;
+    private LinearLayout container;
 
     private Channel currentChannel;
     private boolean isPlaying=false;
@@ -105,51 +111,54 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     }
 
     private void adworks() {
-        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
-            Log.d("networks", Arrays.toString(Appodeal.getNetworks(ExoPlayerActivity.this,Appodeal.INTERSTITIAL).toArray()));
+        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
+            player.pause();
+            View loading=View.inflate(ExoPlayerActivity.this,R.layout.loading_view,null);
+            container=findViewById(R.id.player_activity_container);
+            container.addView(loading);
+            loading.bringToFront();
 
-            if (Appodeal.canShow(Appodeal.INTERSTITIAL)){
-                Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
-                    @Override
-                    public void onInterstitialLoaded(boolean b) {
-                        Log.d("appodeal","loaded");
-                    }
+            InterstitialAd.load(ExoPlayerActivity.this,Constants.ADMOB_INTERSTITIAL,new AdRequest.Builder().build(),new InterstitialAdLoadCallback(){
+                @Override
+                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                    Log.d("interstitial","loaded");
+                    container.removeView(loading);
+                    interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            super.onAdFailedToShowFullScreenContent(adError);
+                            Log.d("interstitial",adError.getMessage());
+                        }
 
-                    @Override
-                    public void onInterstitialFailedToLoad() {
-                        Log.d("appodeal","failed to load");
-                    }
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            super.onAdShowedFullScreenContent();
+                            Log.d("interstitial","show");
+                        }
 
-                    @Override
-                    public void onInterstitialShown() {
-                        player.pause();
-                        Log.d("appodeal","show");
-                    }
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            super.onAdDismissedFullScreenContent();
+                            Log.d("interstitial","dismiss");
+                            player.play();
+                        }
 
-                    @Override
-                    public void onInterstitialShowFailed() {
-                        Log.d("appodeal","failed to show");
-                    }
+                        @Override
+                        public void onAdImpression() {
+                            super.onAdImpression();
+                            Log.d("interstitial","impression");
+                        }
+                    });
+                    interstitialAd.show(ExoPlayerActivity.this);
+                }
 
-                    @Override
-                    public void onInterstitialClicked() {
-                        Log.d("appodeal","click");
-                    }
-
-                    @Override
-                    public void onInterstitialClosed() {
-                        player.play();
-                        Appodeal.destroy(Appodeal.INTERSTITIAL);
-                        Log.d("appodeal","closed");
-                    }
-
-                    @Override
-                    public void onInterstitialExpired() {
-                        Log.d("appodeal","expired");
-                    }
-                });
-                Appodeal.show(ExoPlayerActivity.this,Appodeal.INTERSTITIAL);
-            }
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    container.removeView(loading);
+                    player.play();
+                    super.onAdFailedToLoad(loadAdError);
+                }
+            });
         }
     }
 

@@ -16,12 +16,15 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -43,6 +46,7 @@ import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.util.ThemeUtil;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
@@ -61,8 +65,7 @@ import java.util.Map;
 import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AdView banner;
+    private FrameLayout bannerContainer;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
     private RelativeLayout contentFrameContainer;
@@ -84,14 +87,13 @@ public class MainActivity extends AppCompatActivity {
     private SearchFragment searchFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initiateServices();
-
+        prefHelper=new PrefHelper(MainActivity.this);
         setTheme(ThemeUtil.getPrefTheme(prefHelper));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initiateViews();
 
+        initiateServices();
     }
 
     private void checkPremium() {
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateViews() {
-        banner =findViewById(R.id.banner);
+        bannerContainer=findViewById(R.id.banner_layout);
         contentFrameContainer=findViewById(R.id.contentFrameContainer);
         rootContainer=findViewById(R.id.rootContainer);
         materialToolbar=findViewById(R.id.toolbar);
@@ -194,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.bottom_nav_playlist);
-
     }
 
     @Override
@@ -211,9 +212,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateServices() {
-        prefHelper=new PrefHelper(MainActivity.this);
+        initiateViews();
         billingWorks();
         adWorks();
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
     }
 
     public void setLoading(boolean b){
@@ -337,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void removeAds() {
         prefHelper.writePref(Constants.PREF_IS_PREMIUM,true);
-        banner.setVisibility(View.GONE);
+        bannerContainer.setVisibility(View.GONE);//todo:check
     }
     private void checkPurchases() {
         Log.d("checkpurchase", "here");
@@ -393,18 +399,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void adWorks() {
-        if (prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
+        if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){//todo:check
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
                 public void onInitializationComplete(InitializationStatus initializationStatus) {
                     Map<String, AdapterStatus> map=initializationStatus.getAdapterStatusMap();
                     for (String key:map.keySet()){
                         AdapterStatus adapterStatus=map.get(key);
-                        Log.d("Ad Network Init",key+":"+adapterStatus.getDescription());
+                        Log.d("Ad Network Init",key+":"+adapterStatus.getInitializationState().toString());
                     }
                 }
             });
+            AdView banner=new AdView(MainActivity.this);
+            banner.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             banner.setAdUnitId(Constants.ADMOB_BANNER);
+            banner.setAdSize(AdSize.SMART_BANNER);
+            bannerContainer.addView(banner);
             AdRequest adRequest=new AdRequest.Builder().build();
             banner.loadAd(adRequest);
         }
