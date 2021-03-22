@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -81,8 +82,20 @@ public class MyPlaylistsFragment extends Fragment{
         categoryViewModel=new ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication())).get(CategoryViewModel.class);
         channelViewModel=new ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication())).get(ChannelViewModel.class);
         setHasOptionsMenu(true);
+
     }
 
+    private void checkIntent() {
+        Intent intent=getActivity().getIntent();
+        if (intent!=null&&intent.getAction().equals(Intent.ACTION_VIEW)){
+            String type=intent.getType();
+            Log.i("intent_type",type);
+            Uri data=intent.getData();
+            Log.i("path",data.toString());
+            handleFileSelect(data.toString(),!URLUtil.isNetworkUrl(data.toString()));
+        }
+        getActivity().setIntent(null);
+    }
 
 
     @Nullable
@@ -155,6 +168,7 @@ public class MyPlaylistsFragment extends Fragment{
         });
         //todo:intercept ontouch and close fab.
         super.onViewCreated(view, savedInstanceState);
+        checkIntent();
     }
 
     private void exportPlaylistFlow() {
@@ -274,6 +288,7 @@ public class MyPlaylistsFragment extends Fragment{
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void handleFileSelect(String uri,boolean isLocal){
+        Log.d("isLocal", String.valueOf(isLocal));
         M3UParser m3UParser=new M3UParser(getContext(), new ParserListener() {
             @Override
             public void onFinish(Enums.ParseResult parseResult, List<Channel> channelList, String message) {
@@ -341,7 +356,12 @@ public class MyPlaylistsFragment extends Fragment{
                 ((MainActivity)getActivity()).setLoading(false);
                 ChannelAddBottomSheetDialogFragment channelAddBottomSheetDialogFragment=new ChannelAddBottomSheetDialogFragment();
                 Bundle args=new Bundle();
-                args.putLong(Constants.ARGS_CATEGORY_ID,customViewPagerAdapter.getCategoryAt(viewPager.getCurrentItem()).getId());
+                try {
+                    args.putLong(Constants.ARGS_CATEGORY_ID,customViewPagerAdapter.getCategoryAt(viewPager.getCurrentItem()).getId());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 channelAddBottomSheetDialogFragment.setArguments(args);
                 channelAddBottomSheetDialogFragment.show(getFragmentManager(),"bottom_sheet_fragment");
             }

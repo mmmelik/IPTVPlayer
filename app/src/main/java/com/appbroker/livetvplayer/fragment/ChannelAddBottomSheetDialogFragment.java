@@ -52,7 +52,8 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
         super.onCreate(savedInstanceState);
         this.channelViewModel= new ViewModelProvider(ChannelAddBottomSheetDialogFragment.this,new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication())).get(ChannelViewModel.class);
         this.categoryViewModel= new ViewModelProvider(ChannelAddBottomSheetDialogFragment.this,new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
-        this.selectedCategoryId= getArguments().getLong(Constants.ARGS_CATEGORY_ID);
+        this.selectedCategoryId = getArguments().getLong(Constants.ARGS_CATEGORY_ID,-1);
+        //todo:selected category
     }
 
     @Nullable

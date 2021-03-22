@@ -57,6 +57,7 @@ public class M3UParser {
             return false;
         }
     }
+
     public void parseLocal(String s){
         Uri uri=Uri.parse(s);
         if (isPlayList(uri)){
@@ -67,6 +68,7 @@ public class M3UParser {
             parserListener.onFinish(Enums.ParseResult.SUCCESS,channels,"Parsing finished successfully");
         }
     }
+
     private String parseNameFromUri(Uri uri){
         try {
             File file=new File(uri.getPath());
@@ -75,6 +77,7 @@ public class M3UParser {
             return context.getResources().getString(R.string.unknown);
         }
     }
+
     private List<Channel> parseFromLocalPlaylist(Uri uri){
         try {
             BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(context.getContentResolver().openInputStream(uri)));
@@ -94,6 +97,7 @@ public class M3UParser {
             return null;
         }
     }
+
     public void parseFromURL(String url){
         new Thread() {
             @Override
