@@ -4,7 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="5dp"
-    >
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:gravity="center_horizontal">
     <CheckBox
         android:id="@+id/add_list_item_check"
         android:layout_width="wrap_content"
@@ -19,14 +20,18 @@
         android:layout_centerVertical="true"
         android:id="@+id/add_list_item_container"
         android:layout_toLeftOf="@id/add_list_item_check"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:clickable="false"
+        android:focusable="false">
         <TextView
             android:text="Name"
             android:id="@+id/add_list_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:clickable="false"
+            android:focusable="false"/>
         <TextView
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
@@ -34,7 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            android:clickable="false"
+            android:focusable="false"/>
     </LinearLayout>
 
 </RelativeLayout>

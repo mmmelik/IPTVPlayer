@@ -47,6 +47,11 @@
         android:layout_weight="1"/>
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginVertical="5dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
@@ -61,7 +66,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/bottom_sheet_category_spinner"
                     android:layout_width="0dp"
@@ -70,20 +76,20 @@
                     android:layout_weight="1"/>
                 <ImageView
                     android:id="@+id/bottom_sheet_add_category_image"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
                     android:src="@drawable/ic_baseline_add_box_24"
                     android:contentDescription="@string/add_category"
-                    app:tint="?attr/colorAccent" />
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
             </LinearLayout>
         </LinearLayout>
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/bottom_sheet_add_channels_button"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_channels"
-            android:background="?attr/colorAccent"/>
+            app:backgroundTint="?attr/colorAccent"/>
     </LinearLayout>
 </LinearLayout>
