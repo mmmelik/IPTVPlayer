@@ -16,7 +16,6 @@ public class Channel {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ForeignKey(entity = Category.class,parentColumns = "id",childColumns = "category_id")
     private int category_id;
 
     private String name;
