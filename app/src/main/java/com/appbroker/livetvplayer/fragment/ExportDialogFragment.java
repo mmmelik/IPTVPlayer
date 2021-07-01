@@ -157,7 +157,6 @@ public class ExportDialogFragment extends DialogFragment {
         dismiss();
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this,requestCode,permissions,grantResults);

@@ -1,88 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:id="@+id/player_controller_switcher">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:background="#000"
-        android:alpha="0.6"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp">
-        <ImageView
-            android:id="@+id/player_controller_fav_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fav_icon_state_selector"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"/>
-        <TextView
-            android:id="@+id/player_controller_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"/>
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#000"
-        android:alpha="0.6"
-        android:padding="5dp"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/player_controller_head"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <ImageButton android:id="@id/exo_prev"
-                style="@style/ExoMediaButton.Previous"/>
-
-            <ImageButton android:id="@id/exo_play"
-                style="@style/ExoMediaButton.Play"/>
-
-            <ImageButton android:id="@id/exo_pause"
-                style="@style/ExoMediaButton.Pause"/>
-
-            <ImageButton android:id="@id/exo_next"
-                style="@style/ExoMediaButton.Next"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:background="#000"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView android:id="@id/exo_position"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp">
+            <ImageView
+                android:id="@+id/player_controller_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_baseline_arrow_back_white_24"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+            <TextView
+                android:id="@+id/player_controller_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:includeFontPadding="false"
-                android:textColor="#FFBEBEBE"/>
-
-            <View android:id="@id/exo_progress_placeholder"
-                android:layout_width="0dp"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:layout_height="26dp"/>
-
-            <TextView android:id="@id/exo_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:includeFontPadding="false"
-                android:textColor="#FFBEBEBE"/>
-
+                android:alpha="0.6"/>
+            <ImageView
+                android:id="@+id/player_controller_fav_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="center"
+                android:src="@drawable/fav_icon_state_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
         </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_ui_circle_button_bg"
+            android:layout_below="@id/player_controller_head"
+            android:layout_margin="10dp"
+            android:clipChildren="false">
+            <ImageView
+                android:id="@+id/player_controller_lock"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_baseline_lock_open_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#000"
+            android:alpha="0.6"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageButton android:id="@id/exo_prev"
+                    style="@style/ExoMediaButton.Previous"/>
+
+                <ImageButton android:id="@id/exo_play"
+                    style="@style/ExoMediaButton.Play"/>
+
+                <ImageButton android:id="@id/exo_pause"
+                    style="@style/ExoMediaButton.Pause"/>
+
+                <ImageButton android:id="@id/exo_next"
+                    style="@style/ExoMediaButton.Next"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView android:id="@id/exo_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:includeFontPadding="false"
+                    android:textColor="#FFBEBEBE"/>
+
+                <View android:id="@id/exo_progress_placeholder"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="26dp"/>
+
+                <TextView android:id="@id/exo_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:includeFontPadding="false"
+                    android:textColor="#FFBEBEBE"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_ui_circle_button_bg"
+            android:layout_margin="10dp"
+            android:clipChildren="false">
+            <ImageView
+                android:id="@+id/locked_player_controller_unlock"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_baseline_lock_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </RelativeLayout>
+</ViewSwitcher>

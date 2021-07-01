@@ -1,16 +1,21 @@
 package com.appbroker.livetvplayer;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.transition.Visibility;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -19,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
@@ -37,12 +44,6 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Random;
-
 public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener {
     private int channelId;
     private ChannelViewModel channelViewModel;
@@ -50,13 +51,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private ImageView favIcon;
     private TextView playerControllerTitle;
     private LinearLayout container;
-
+    private ImageView lockUIIcon;
+    private ImageView unlockUIIcon;
+    private PlayerView playerView;
     private Channel currentChannel;
+    private RelativeLayout lockedController;
+    private ImageView backIcon;
+
+    private ViewSwitcher uiSwitcher;
     private boolean isPlaying=false;
     private boolean wasPlaying=false;
+    private boolean isUILocked=false;
 
     private PrefHelper prefHelper;
 
+    private final String TAG=this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +75,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
         prefHelper=new PrefHelper(this);
         setContentView(R.layout.activity_exo_player);
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
-            WindowInsetsController windowInsetsController=getWindow().getInsetsController();
-            windowInsetsController.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars() | WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
-            windowInsetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE);
-        }if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }else {
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-
+        removeSystemUI();
 
         Intent intent=getIntent();
         channelId=intent.getIntExtra(Constants.ARGS_CHANNEL_ID,0);
-        PlayerView playerView = findViewById(R.id.player_view);
+        playerView = findViewById(R.id.player_view);
         channelViewModel=new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(ChannelViewModel.class);
         player = new SimpleExoPlayer.Builder(this).build();
         player.addListener(this);
@@ -108,6 +108,149 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
         });
         playerControllerTitle=playerView.findViewById(R.id.player_controller_title);
         adworks();
+
+        lockUIIcon=findViewById(R.id.player_controller_lock);
+        lockUIIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lockUI();
+            }
+        });
+
+        uiSwitcher=findViewById(R.id.player_controller_switcher);
+
+        unlockUIIcon=findViewById(R.id.locked_player_controller_unlock);
+        unlockUIIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unlockUI();
+            }
+        });
+        playerView.setControllerShowTimeoutMs(2000);
+        backIcon=findViewById(R.id.player_controller_back);
+        backIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExoPlayerActivity.this.finish();
+            }
+        });
+    }
+
+    private void unlockUI() {
+        isUILocked=false;
+        uiSwitcher.showNext();
+        playerView.setControllerHideOnTouch(true);
+        unlockOrientation();
+    }
+
+    private void lockUI() {
+        isUILocked=true;
+        uiSwitcher.showNext();
+        playerView.setControllerHideOnTouch(false);
+        lockOrientation();
+        Toast.makeText(this,R.string.ui_locked,Toast.LENGTH_SHORT).show();
+    }
+
+    private void lockOrientation(){
+        int currentOrientation=getScreenOrientation();
+        setRequestedOrientation(currentOrientation);
+        Log.d(TAG, String.valueOf(currentOrientation));
+    }
+
+    private void unlockOrientation(){
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+    }
+
+    private int getScreenOrientation() {
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        int orientation;
+        // if the device's natural orientation is portrait:
+        if ((rotation == Surface.ROTATION_0
+                || rotation == Surface.ROTATION_180) && height > width ||
+                (rotation == Surface.ROTATION_90
+                        || rotation == Surface.ROTATION_270) && width > height) {
+            switch(rotation) {
+                case Surface.ROTATION_0:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    break;
+                case Surface.ROTATION_90:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                    break;
+                case Surface.ROTATION_180:
+                    orientation =
+                            ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    break;
+                case Surface.ROTATION_270:
+                    orientation =
+                            ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    break;
+                default:
+                    Log.e(TAG, "Unknown screen orientation. Defaulting to " +
+                            "portrait.");
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    break;
+            }
+        }
+        // if the device's natural orientation is landscape or if the device
+        // is square:
+        else {
+            switch(rotation) {
+                case Surface.ROTATION_0:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                    break;
+                case Surface.ROTATION_90:
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    break;
+                case Surface.ROTATION_180:
+                    orientation =
+                            ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    break;
+                case Surface.ROTATION_270:
+                    orientation =
+                            ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    break;
+                default:
+                    Log.e(TAG, "Unknown screen orientation. Defaulting to " +
+                            "landscape.");
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                    break;
+            }
+        }
+
+        return orientation;
+    }
+
+    private void removeSystemUI() {
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                {
+                    removeSystemUI();
+                }
+            }
+        });
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R){
+            WindowInsetsController windowInsetsController=getWindow().getInsetsController();
+            windowInsetsController.hide(WindowInsets.Type.statusBars()
+                    | WindowInsets.Type.navigationBars()
+                    | WindowInsets.Type.systemBars()
+                    | WindowInsets.Type.displayCutout());
+            windowInsetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE);
+        }if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+        }else {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
     }
 
     private void adworks() {
@@ -117,8 +260,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             container=findViewById(R.id.player_activity_container);
             container.addView(loading);
             loading.bringToFront();
-
-            InterstitialAd.load(ExoPlayerActivity.this,Constants.ADMOB_INTERSTITIAL,new AdRequest.Builder().build(),new InterstitialAdLoadCallback(){
+            InterstitialAd.load(ExoPlayerActivity.this,Constants.ADMOB_INTERSTITIAL_TEST,new AdRequest.Builder().build(),new InterstitialAdLoadCallback(){
                 @Override
                 public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                     Log.d("interstitial","loaded");
@@ -140,6 +282,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
                         public void onAdDismissedFullScreenContent() {
                             super.onAdDismissedFullScreenContent();
                             Log.d("interstitial","dismiss");
+                            removeSystemUI();
                             player.play();
                         }
 

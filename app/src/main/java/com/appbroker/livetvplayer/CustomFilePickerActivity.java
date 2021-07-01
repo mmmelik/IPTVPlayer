@@ -119,6 +119,7 @@ public class CustomFilePickerActivity extends AppCompatActivity {
                         Intent intent=getFilePickerIntent();
                         intent.setClassName(resolveInfo.activityInfo.packageName,resolveInfo.activityInfo.name);
                         startActivityForResult(intent,Constants.REQUEST_CODE_PICK_FILE);
+
                     }
                 }
                 drawerLayout.closeDrawers();

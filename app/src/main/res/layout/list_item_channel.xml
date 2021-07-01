@@ -8,7 +8,10 @@
     android:layout_marginLeft="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
-    android:id="@+id/fav_list_item_card">
+    android:id="@+id/fav_list_item_card"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:focusable="true">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -20,6 +20,7 @@ import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -49,6 +50,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -59,6 +61,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -76,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private View loadingView;
 
-    private BillingClient billingClient;
-    private List<String> skuList;
-    private SkuDetails skuDetailsNoAds;
     private PrefHelper prefHelper;
 
     private FavoriteFragment favoriteFragment;
@@ -120,6 +120,15 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
+        rootContainer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //rootContainer.getChildAt(0).getHitRect();
+                Log.d("touch", String.valueOf(event.getButtonState()));
+                return true;
+            }
+        });
+
         SwitchMaterial switchMaterial=navigationView.getMenu().findItem(R.id.navigation_drawer_dark_mode).getActionView().findViewById(R.id.nav_switch);
         switchMaterial.setChecked(ThemeUtil.isDarkMode(prefHelper));
         switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -157,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if (id==R.id.navigation_drawer_account_status){
                     if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
-                        removeAdsButton();
+                        showBuyPremiumDialog();
                     }
                 }
                 drawerLayout.closeDrawers();
@@ -198,6 +207,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.bottom_nav_playlist);
     }
 
+    private void showBuyPremiumDialog() {
+    }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -213,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initiateServices() {
         initiateViews();
-        billingWorks();
         adWorks();
     }
 
@@ -249,146 +260,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void billingWorks(){
-        PurchasesUpdatedListener purchasesUpdatedListener=new PurchasesUpdatedListener() {
-            @Override
-            public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-                Log.d("purchase update",billingResult.getDebugMessage());
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list!=null){
-                    for (Purchase purchase : list){
-                        handlePurchase(purchase);
-                    }
-                    snackbar(getString(R.string.purchase_successful),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED){
-                    snackbar(getString(R.string.purchase_canceled), getString(R.string.undo), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            removeAdsButton();
-                        }
-                    });
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE){
-                    snackbar(getString(R.string.service_unavailable),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE){
-                    snackbar(getString(R.string.billing_unavailable),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_UNAVAILABLE){
-                    snackbar(getString(R.string.product_unavailable),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.DEVELOPER_ERROR){
-                    snackbar(getString(R.string.developer_error),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ERROR){
-                    snackbar(getString(R.string.error),null,null);
-                }else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED){
-                    snackbar(getString(R.string.product_already_owned),null,null);
-                }else{
-                    snackbar(getString(R.string.unknown_error),null,null);
-                }
-                Log.d("response", String.valueOf(billingResult.getResponseCode()));
-            }
-        };
-
-        billingClient = BillingClient.newBuilder(this)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                Log.d("billingSetupFinished",billingResult.getDebugMessage());
-                checkPurchases();
-            }
-
-            @Override
-            public void onBillingServiceDisconnected() {
-                Log.d("billing","service disconnected");
-            }
-        });
-
-    }
-
-    private void handlePurchase(Purchase purchase) {
-        if (purchase.getSku().equals(SKU_REMOVE_ADS)){
-            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED){
-                Log.d("removeads","purchased");
-                checkPremium();
-                if(!purchase.isAcknowledged()){
-                    AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                            .setPurchaseToken(purchase.getPurchaseToken())
-                            .build();
-                    billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
-                        @Override
-                        public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                            Log.d("acknowledgePurchase",billingResult.getDebugMessage());
-                        }
-                    });
-                }
-                removeAds();
-            }else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING){
-                Log.d("removeads","pending");
-                AlertDialog alertDialog=new AlertDialog.Builder(this)
-                        .setTitle(R.string.pending_recent_purchase)
-                        .setMessage(R.string.pending_purchase_message)
-                        .setCancelable(false)
-                        .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create();
-                alertDialog.show();
-            }
-
-        }
-
-    }
-
-    private void removeAds() {
-        prefHelper.writePref(Constants.PREF_IS_PREMIUM,true);
-        bannerContainer.setVisibility(View.GONE);//todo:check
-    }
-    private void checkPurchases() {
-        Log.d("checkpurchase", "here");
-        Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
-        if (purchasesResult.getPurchasesList()!=null){
-            Log.d("purchaseSize", String.valueOf(purchasesResult.getPurchasesList().size()));
-            for (Purchase purchase:purchasesResult.getPurchasesList()){
-                handlePurchase(purchase);
-                Log.d("purchaseresult",purchase.getSku());
-            }
-        }else {
-            Log.d("purchaseresult","null");
-        }
-    }
-
-    private void removeAdsButton() {
-        skuList = new ArrayList<> ();
-        skuList.add(SKU_REMOVE_ADS);
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-        billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (list != null) {
-                        for (SkuDetails skuDetails : list) {
-                            if (SKU_REMOVE_ADS.equals(skuDetails.getSku())) {
-                                skuDetailsNoAds = skuDetails;
-                                BillingFlowParams billingFlowParams=BillingFlowParams.newBuilder()
-                                        .setSkuDetails(skuDetailsNoAds)
-                                        .build();
-                                int responseCode=billingClient.launchBillingFlow(MainActivity.this,billingFlowParams).getResponseCode();
-                                Log.d("remove_ads_response", String.valueOf(responseCode));
-                            }
-                        }
-                    } else {
-                        snackbar(getResources().getString(R.string.unknown_error),null,null);
-                        Log.d("skuDetail", "list null");
-                    }
-                }
-            }
-        });
-
-    }
-
     public void snackbar(String message, String actionLabel, View.OnClickListener onClickListener){
         if (actionLabel!=null){
             Snackbar.make(rootLayout, message, Snackbar.LENGTH_LONG).setAction(actionLabel,onClickListener).show();
@@ -412,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             });
             AdView banner=new AdView(MainActivity.this);
             banner.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            banner.setAdUnitId(Constants.ADMOB_BANNER);
+            banner.setAdUnitId(Constants.ADMOB_BANNER_TEST);
             banner.setAdSize(AdSize.SMART_BANNER);
             bannerContainer.addView(banner);
             AdRequest adRequest=new AdRequest.Builder().build();

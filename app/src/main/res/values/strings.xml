@@ -98,5 +98,6 @@
     <string name="share">share</string>
     <string name="undo">undo</string>
     <string name="grant">grant</string>
+    <string name="ui_locked">Player screen locked. Tap unlock icon to unlock.</string>
 
 </resources>

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +20,14 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -54,11 +54,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
-import kr.co.namee.permissiongen.PermissionSuccess;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -72,6 +70,20 @@ public class MyPlaylistsFragment extends Fragment{
     private ImageView addCategory;
     private CustomViewPagerAdapter customViewPagerAdapter;
     private SearchView searchView;
+
+    private final ActivityResultLauncher<String> permissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result){
+            Intent intent=new Intent(getContext(), CustomFilePickerActivity.class);
+            startActivityForResult(intent,Constants.REQUEST_CODE_PICK_FILE);
+        }else {
+            snackbar(getString(R.string.storage_permission_required), getString(R.string.grant), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchFileChooserFlow();
+                }
+            });
+        }
+    });
 
     public MyPlaylistsFragment() {
     }
@@ -220,38 +232,10 @@ public class MyPlaylistsFragment extends Fragment{
         return "";
     }
     private void launchFileChooserFlow() {
-        PermissionGen
-                .with(this)
-                .addRequestCode(100)
-                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .request();
+        permissionResultLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
 
-    @Keep
-    @PermissionSuccess(requestCode = 100)
-    private void onStorageRequestSuccess(){
-
-        //Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-        //String[] mimeTypes={"audio/*","video/*","application/vnd.apple.mpegurl"};
-        //intent.setType("*/*");
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        //    intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        //}else {
-        //    intent.setType("video/*|audio/*|application/*");
-        //}
-        //startActivityForResult(intent,Constants.REQUEST_CODE_PICK_FILE);
-
-        /*Intent intent=new Intent(getContext(),FilePickerActivity.class);
-        intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-        intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-        intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-        intent.putExtra(FilePickerActivity.EXTRA_START_PATH, getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath());
-        startActivityForResult(intent,Constants.REQUEST_CODE_PICK_FILE);*/
-
-        Intent intent=new Intent(getContext(), CustomFilePickerActivity.class);
-        startActivityForResult(intent,Constants.REQUEST_CODE_PICK_FILE);
-    }
     @Keep
     @PermissionFail(requestCode = 100)
     private void onStorageRequestFail(){
@@ -441,5 +425,8 @@ public class MyPlaylistsFragment extends Fragment{
             DialogUtils.deleteChannelDialog((MainActivity)getActivity(),channelId).show();
         }
         return super.onContextItemSelected(item);
+    }
+    private void snackbar(String msg, @Nullable String actionLabel, @Nullable View.OnClickListener listener){
+        ((MainActivity)getActivity()).snackbar(msg,actionLabel,listener);
     }
 }

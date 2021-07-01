@@ -38,7 +38,6 @@ public class Constants {
     public static final String ADMOB_INTERSTITIAL_TEST="ca-app-pub-3940256099942544/1033173712";
     public static final String ADMOB_NATIVE_TEST="ca-app-pub-3940256099942544/1044960115";
 
-    public static final String APPODEAL_ID="094ed1800367e3472a5d84f1674cde1c6b9d6b8d6ae2e426";
 
     public static final String SKU_REMOVE_ADS="com.appbroker.livetvplayer.removeads";
 }
