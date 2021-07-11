@@ -4,14 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -25,20 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.appbroker.livetvplayer.fragment.FavoriteFragment;
 import com.appbroker.livetvplayer.fragment.MyPlaylistsFragment;
 import com.appbroker.livetvplayer.fragment.NotificationsFragment;
@@ -50,7 +36,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -60,12 +45,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-
-import static com.appbroker.livetvplayer.util.Constants.SKU_REMOVE_ADS;
 
 public class MainActivity extends AppCompatActivity {
     private FrameLayout bannerContainer;
@@ -166,8 +146,11 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if (id==R.id.navigation_drawer_account_status){
                     if (!prefHelper.readBooleanPref(Constants.PREF_IS_PREMIUM)){
-                        showBuyPremiumDialog();
+                        showBuyPremiumFlow();
                     }
+                }else if (id==R.id.navigation_drawer_settings){
+                    Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
+                    startActivity(intent);
                 }
                 drawerLayout.closeDrawers();
                 return true;
@@ -207,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.bottom_nav_playlist);
     }
 
-    private void showBuyPremiumDialog() {
+    private void showBuyPremiumFlow() {
     }
 
     @Override
