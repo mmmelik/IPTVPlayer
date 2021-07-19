@@ -29,6 +29,7 @@ import com.appbroker.livetvplayer.fragment.FavoriteFragment;
 import com.appbroker.livetvplayer.fragment.MyPlaylistsFragment;
 import com.appbroker.livetvplayer.fragment.NotificationsFragment;
 import com.appbroker.livetvplayer.fragment.SearchFragment;
+import com.appbroker.livetvplayer.util.BillingUtil;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.util.ThemeUtil;
@@ -48,6 +49,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String TAG=MainActivity.class.getName();
+
     private FrameLayout bannerContainer;
     private RelativeLayout rootLayout;
     private RelativeLayout rootContainer;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private View loadingView;
 
     private PrefHelper prefHelper;
+    private BillingUtil billingUtil;
 
     private FavoriteFragment favoriteFragment;
     private MyPlaylistsFragment myPlaylistsFragment;
@@ -191,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBuyPremiumFlow() {
+        int response=billingUtil.launchPurchaseFlow();
+        Log.d(TAG,String.valueOf(response));
     }
 
     @Override
@@ -209,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
     private void initiateServices() {
         initiateViews();
         adWorks();
+        billingUtil=new BillingUtil(MainActivity.this);
     }
 
     @Override

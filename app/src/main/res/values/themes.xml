@@ -15,6 +15,7 @@
         <item name="android:textColor">@color/gray_dark</item>
         <item name="cardBackgroundColor">@color/gray_lighter</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetThemeLight</item>
+        <item name="alertDialogTheme">@style/AlertDialogThemeLight</item>
 
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
@@ -36,11 +37,24 @@
         <item name="android:textColorSecondary">@color/gray_light</item>
         <item name="cardBackgroundColor">@color/gray_darker</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetThemeDark</item>
+        <item name="alertDialogTheme">@style/AlertDialogThemeDark</item>
+        
         
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
     </style>
-
+    <style name="AlertDialogThemeDark" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarButtonStyle">@style/DialogButtonsStyleDark</item>
+    </style>
+    <style name="AlertDialogThemeLight" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarButtonStyle">@style/DialogButtonsStyleLight</item>
+    </style>
+    <style name="DialogButtonsStyleDark" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#fff</item>
+    </style>
+    <style name="DialogButtonsStyleLight" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#000</item>
+    </style>
     <style name="Theme.IPTVPlayerDark.FullScreen" parent="Theme.IPTVPlayerDark">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
