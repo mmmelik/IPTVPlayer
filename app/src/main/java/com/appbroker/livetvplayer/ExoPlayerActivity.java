@@ -2,19 +2,20 @@ package com.appbroker.livetvplayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowInsets;
@@ -44,7 +45,7 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
-public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener {
+public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener{
     private int channelId;
     private ChannelViewModel channelViewModel;
     private SimpleExoPlayer player;
@@ -62,16 +63,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private boolean isPlaying=false;
     private boolean wasPlaying=false;
     private boolean isUILocked=false;
+    private boolean unlockByTwoTap;
+    private boolean playInBackground;
 
     private PrefHelper prefHelper;
+    private GestureDetectorCompat gestureDetector;
 
     private final String TAG=this.getClass().getSimpleName();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        getSettings();
         prefHelper=new PrefHelper(this);
         setContentView(R.layout.activity_exo_player);
 
@@ -132,6 +138,30 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             @Override
             public void onClick(View v) {
                 ExoPlayerActivity.this.finish();
+            }
+        });
+        gestureDetector=new GestureDetectorCompat(this,new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDown(MotionEvent e) {
+                Log.d(TAG,"one tap!");
+                return super.onDown(e);
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Log.d(TAG,"double tap!");
+                if (isUILocked&&unlockByTwoTap){
+                    Log.d(TAG,"unlock!");
+                    unlockUI();
+                    return true;
+                }
+                return super.onDoubleTap(e);
+            }
+        });
+        playerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
         });
     }
@@ -374,6 +404,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (isUILocked){
+            playerView.showController();
+        }else {
+            super.onBackPressed();
+        }
+
+    }
+
+    private void getSettings(){
+        SharedPreferences sharedPreferences=PreferenceManager.getDefaultSharedPreferences(ExoPlayerActivity.this);
+        unlockByTwoTap = sharedPreferences.getBoolean("pref_unlock_two_tap",true);
+        playInBackground = sharedPreferences.getBoolean("pref_unlock_two_tap",false);
     }
 }
