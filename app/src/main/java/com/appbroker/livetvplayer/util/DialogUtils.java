@@ -136,4 +136,18 @@ public class DialogUtils {
         });
         builder.create().show();
     }
+
+    public static void showLeaveApplicationWarningDialog(Context context, DialogInterface.OnClickListener onConfirmListener){
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+        builder.setTitle(R.string.leave);
+        builder.setMessage(R.string.about_to_leave);
+        builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.yes,onConfirmListener);
+        builder.create().show();
+    }
 }
