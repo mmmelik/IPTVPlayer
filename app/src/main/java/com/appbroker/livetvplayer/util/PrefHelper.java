@@ -36,4 +36,10 @@ public class PrefHelper {
         editor.putBoolean(name,value);
         editor.apply();
     }
+
+    public void writePref(String name,String value){
+        editor=sharedPreferences.edit();
+        editor.putString(name,value);
+        editor.apply();
+    }
 }

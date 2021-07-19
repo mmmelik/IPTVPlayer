@@ -99,5 +99,38 @@
     <string name="undo">undo</string>
     <string name="grant">grant</string>
     <string name="ui_locked">Player screen locked. Tap unlock icon to unlock.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="player">Player</string>
+    <string name="version">Version</string>
+    <string name="build_info">Build Information</string>
+    <string name="support">Support</string>
+    <string name="report_bug">Report a Bug</string>
+    <string name="application">Application</string>
+    <string name="play_store">Google Play Store</string>
+    <string name="show_store_page">Show Google Play Store Page</string>
+    <string name="request_feature">Request Feature</string>
+    <string name="play_in_the_background">Play In The Background</string>
+    <string name="play_in_the_background_summary_on">Keep playing after you get the app in the background.</string>
+    <string name="play_in_the_background_summary_off">Do not play in the background.</string>
+    <string name="unlock_by_double_tap_on">Unlock the player by double tapping.</string>
+    <string name="unlock_by_double_tap_off">Do not unlock the player by double tapping.</string>
+    <string name="unlock_by_double_tap">Unlock By Double Tap</string>
+    <string name="leave">Leave?</string>
+    <string name="about_to_leave">You are about to leave the application. Are you sure?</string>
 
 </resources>
