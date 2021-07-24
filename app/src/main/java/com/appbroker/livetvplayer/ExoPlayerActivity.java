@@ -357,8 +357,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     @Override
     protected void onPause() {
         super.onPause();
-        wasPlaying=isPlaying;
-        player.pause();
+        if (!playInBackground){
+            wasPlaying=isPlaying;
+            player.pause();
+        }
     }
 
     @Override
