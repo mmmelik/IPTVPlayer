@@ -1,6 +1,7 @@
 package com.appbroker.livetvplayer.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryRecord;
+import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -40,7 +43,12 @@ public class BillingUtil implements PurchasesUpdatedListener{
 
     @Override
     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-        if (billingResult.getResponseCode()== BillingClient.BillingResponseCode.OK && list!=null){
+        if (list != null) {
+            for (Purchase p:list){
+                Log.d(TAG,"Purchased product: "+p.getSkus().get(0)+" "+p.getPurchaseState());
+            }
+        }
+        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list!=null){
             for (Purchase purchase:list){
                 handlePurchase(purchase);
             }
@@ -86,37 +94,59 @@ public class BillingUtil implements PurchasesUpdatedListener{
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 Log.d(TAG,"Billing service is ready. "+billingResult.getDebugMessage());
                 getSkuDetails();
+                getPurchasedProducts();
             }
         };
         billingClient.startConnection(billingClientStateListener);
+    }
+
+    private void getPurchasedProducts() {
+        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
+            @Override
+            public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
+                for (PurchaseHistoryRecord p:list){
+                    handleOldPurchase(p);
+                }
+            }
+        });
+    }
+
+    private void handleOldPurchase(PurchaseHistoryRecord p) {
+        switch (p.getSkus().get(0)) {//TODO:Consider multiple purchases.
+            case Constants.SKU_REMOVE_ADS:
+                PrefHelper prefHelper=new PrefHelper(activity);
+                prefHelper.writePref(Constants.PREF_IS_PREMIUM,true);
+                Log.d(TAG,"Handle Purchase "+ p.getSkus().get(0));
+                break;
+        }
     }
 
     private void getSkuDetails(){
         List<String> skuList=new ArrayList<>();
         skuList.add(Constants.SKU_REMOVE_ADS);
         SkuDetailsParams.Builder builder=SkuDetailsParams.newBuilder();
-        builder.setSkusList(skuList);
+        builder.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
         billingClient.querySkuDetailsAsync(builder.build(), new SkuDetailsResponseListener() {
             @Override
             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                 skuDetails=list;
-                Log.d(TAG,"BillingResult: "+billingResult.getDebugMessage()+" ___"+list.size());
+                Log.d(TAG,"BillingResult: "+billingResult.getDebugMessage()+" ___ "+skuDetails.size());
             }
         });
     }
 
-    public @BillingClient.BillingResponseCode int launchPurchaseFlow(){
+    public @BillingClient.BillingResponseCode int launchPurchaseFlow(Activity activity){
         if (billingClient.isReady()){
             if (skuDetails.size()>0){
                 BillingFlowParams billingFlowParams=BillingFlowParams.newBuilder()
                         .setSkuDetails(skuDetails.get(0))
                         .build();
+                activity.setIntent(new Intent());
                 return billingClient.launchBillingFlow(activity,billingFlowParams).getResponseCode();
             }
             return BillingClient.BillingResponseCode.DEVELOPER_ERROR;
         }else {
             return BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE;
         }
-
     }
 }

@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBuyPremiumFlow() {
-        int response=billingUtil.launchPurchaseFlow();
+        int response=billingUtil.launchPurchaseFlow(MainActivity.this);
         Log.d(TAG,String.valueOf(response));
     }
 
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             });
             AdView banner=new AdView(MainActivity.this);
             banner.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            banner.setAdUnitId(Constants.ADMOB_BANNER_TEST);
+            banner.setAdUnitId(Constants.ADMOB_BANNER);
             banner.setAdSize(AdSize.SMART_BANNER);
             bannerContainer.addView(banner);
             AdRequest adRequest=new AdRequest.Builder().build();
