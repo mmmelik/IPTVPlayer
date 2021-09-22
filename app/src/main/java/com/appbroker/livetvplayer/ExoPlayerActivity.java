@@ -290,7 +290,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             container=findViewById(R.id.player_activity_container);
             container.addView(loading);
             loading.bringToFront();
-            InterstitialAd.load(ExoPlayerActivity.this,Constants.ADMOB_INTERSTITIAL_TEST,new AdRequest.Builder().build(),new InterstitialAdLoadCallback(){
+            InterstitialAd.load(ExoPlayerActivity.this,Constants.ADMOB_INTERSTITIAL,new AdRequest.Builder().build(),new InterstitialAdLoadCallback(){
                 @Override
                 public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                     Log.d("interstitial","loaded");
@@ -357,8 +357,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     @Override
     protected void onPause() {
         super.onPause();
-        wasPlaying=isPlaying;
-        player.pause();
+        if (!playInBackground){
+            wasPlaying=isPlaying;
+            player.pause();
+        }
     }
 
     @Override
