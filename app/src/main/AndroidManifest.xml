@@ -35,7 +35,8 @@
             android:name=".MainActivity"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"> <!-- Added to change theme in runtime -->
+            android:windowSoftInputMode="adjustNothing"
+            android:exported="true"> <!-- Added to change theme in runtime -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -97,7 +98,8 @@
             android:name=".ExoPlayerActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="user"
-            android:theme="@style/Theme.IPTVPlayerDark.FullScreen">
+            android:theme="@style/Theme.IPTVPlayerDark.FullScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
