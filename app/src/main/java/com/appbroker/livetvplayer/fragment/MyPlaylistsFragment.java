@@ -99,7 +99,7 @@ public class MyPlaylistsFragment extends Fragment{
 
     private void checkIntent() {
         Intent intent=getActivity().getIntent();
-        if (intent!=null&&intent.getAction().equals(Intent.ACTION_VIEW)){
+        if (intent!=null && Intent.ACTION_VIEW.equals(intent.getAction())){
             String type=intent.getType();
             Log.i("intent_type",type);
             Uri data=intent.getData();
