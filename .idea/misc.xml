@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_arrow_back_white_24.xml" value="0.1965" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/custom_player_controller.xml" value="0.18854166666666666" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

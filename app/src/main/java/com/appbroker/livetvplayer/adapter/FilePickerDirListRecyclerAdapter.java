@@ -35,8 +35,11 @@ public class FilePickerDirListRecyclerAdapter extends RecyclerView.Adapter {
     public FilePickerDirListRecyclerAdapter(Context context,File parentFile, File[] fileList, FileSelectListener fileSelectListener) {
         this.context=context;
         this.customFiles = new ArrayList<>();
-        CustomFile p=new CustomFile(parentFile,true);
-        this.customFiles.add(p);
+        if (parentFile!=null){
+            CustomFile p=new CustomFile(parentFile,true);
+            this.customFiles.add(p);
+        }
+
         this.files = new ArrayList<>();
         this.folders = new ArrayList<>();
         if (fileList==null){

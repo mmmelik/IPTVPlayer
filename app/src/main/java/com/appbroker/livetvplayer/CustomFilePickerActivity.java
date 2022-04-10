@@ -170,6 +170,11 @@ public class CustomFilePickerActivity extends AppCompatActivity {
         dirRecyclerView.setAdapter(new FilePickerDirListRecyclerAdapter(this,file.getParentFile(),file.listFiles(), new FileSelectListener() {
             @Override
             public void onFileSelect(CustomFile customFile) {
+                if(customFile.isParentPlaceHolder() && customFile.getFile().getParent()==null){
+                    Toast.makeText(getApplicationContext(),R.string.root_directory,Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
                 if (customFile.isDirectory()){
                     goTo(customFile.getFile());
                 }else {
@@ -183,8 +188,14 @@ public class CustomFilePickerActivity extends AppCompatActivity {
         }));
         pathView.setText(file.getAbsolutePath());
         currentFolder=file;
-        getSupportActionBar().setTitle(file.getName());
+        try {
+            getSupportActionBar().setTitle(file.getName());
+        }catch (NullPointerException e){
+
+        }
+
     }
+
     private void goUp(){
         if (!isRoot()){
             Log.d("test",currentFolder.getAbsolutePath()+"\n"+currentRoot.getAbsolutePath());
@@ -193,9 +204,11 @@ public class CustomFilePickerActivity extends AppCompatActivity {
             goTo(parent);
         }
     }
+
     private boolean isRoot(){
-        return currentFolder.getAbsolutePath().equals(currentRoot.getAbsolutePath());
+        return currentFolder.getParentFile() == null || currentFolder.getAbsolutePath().equals(currentRoot.getAbsolutePath());
     }
+
     private void addExternalApps(){
         PackageManager packageManager=getPackageManager();
         List<ResolveInfo> resolveInfoList=packageManager.queryIntentActivities(getFilePickerIntent(), 0);
@@ -210,6 +223,7 @@ public class CustomFilePickerActivity extends AppCompatActivity {
         }
         navigationView.setItemIconTintList(null);
     }
+
     private Intent getFilePickerIntent(){
         Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");

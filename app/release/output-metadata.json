@@ -5,13 +5,13 @@
     "kind": "Directory"
   },
   "applicationId": "com.appbroker.livetvplayer",
-  "variantName": "processReleaseResources",
+  "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 204,
-      "versionName": "2.0.4",
+      "versionCode": 207,
+      "versionName": "2.0.7",
       "outputFile": "app-release.apk"
     }
   ]

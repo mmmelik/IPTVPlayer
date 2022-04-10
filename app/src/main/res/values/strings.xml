@@ -132,5 +132,6 @@
     <string name="unlock_by_double_tap">Unlock By Double Tap</string>
     <string name="leave">Leave?</string>
     <string name="about_to_leave">You are about to leave the application. Are you sure?</string>
+    <string name="root_directory">Root directory!</string>
 
 </resources>

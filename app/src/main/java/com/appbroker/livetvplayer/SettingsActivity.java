@@ -67,18 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
                     });
                     return true;
                 case "pref_contact":
-                    DialogUtils.showLeaveApplicationWarningDialog(getContext(), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i2 = new Intent(Intent.ACTION_SEND);
-                            i2.setType("*/*");
-                            i2.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.dev_mail)});
-                            i2.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                            if (i2.resolveActivity(getActivity().getPackageManager()) != null) {
-                                startActivity(i2);
-                            }
-                        }
-                    });
+                    sendEmailIntent("");
                     return true;
                 case "pref_request_feature":
                     sendEmailIntent("Feature Request");
@@ -91,18 +80,24 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void sendEmailIntent(String subject) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_EMAIL, R.string.dev_mail);
-            intent.putExtra(Intent.EXTRA_SUBJECT,subject);
-            intent.setType("message/rfc822");
-            try {
-                if (intent.resolveActivity(requireContext().getPackageManager())!=null){
-                    startActivity(intent);
-                }
-            }catch (IllegalStateException e){
-                e.printStackTrace();
-            }
+            DialogUtils.showLeaveApplicationWarningDialog(getContext(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.dev_mail)});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + subject);
+                    intent.setType("message/rfc822");
+                    try {
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
+                    }
 
+                }
+            });
 
         }
 

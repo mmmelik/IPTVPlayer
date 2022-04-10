@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.appbroker.livetvplayer.MainActivity;
 import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.model.Category;
@@ -21,13 +19,12 @@ import com.appbroker.livetvplayer.viewmodel.CategoryViewModel;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 
 import java.io.File;
-import java.util.List;
 
 public class DialogUtils {
     public static AlertDialog createAddCategoryDialog(AppCompatActivity activity){
         CategoryViewModel categoryViewModel= new ViewModelProvider(activity,new ViewModelProvider.AndroidViewModelFactory(activity.getApplication())).get(CategoryViewModel.class);
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
-        View dialogView=View.inflate(activity, R.layout.dialog_add_category,null);
+        View dialogView=View.inflate(activity.getApplicationContext(), R.layout.dialog_add_category,null);
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
