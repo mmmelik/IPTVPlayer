@@ -12,6 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.DialogUtils;
 import com.appbroker.livetvplayer.util.PrefHelper;
 import com.appbroker.livetvplayer.util.ThemeUtil;
@@ -80,11 +81,29 @@ public class SettingsActivity extends AppCompatActivity {
                     });
                     return true;
                 case "pref_request_feature":
+                    sendEmailIntent("Feature Request");
                     return true;
-                    case "pref_report":
+                case "pref_report":
+                    sendEmailIntent("Report Issue & Bug");
                     return true;
             }
             return false;
+        }
+
+        private void sendEmailIntent(String subject) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_EMAIL, R.string.dev_mail);
+            intent.putExtra(Intent.EXTRA_SUBJECT,subject);
+            intent.setType("message/rfc822");
+            try {
+                if (intent.resolveActivity(requireContext().getPackageManager())!=null){
+                    startActivity(intent);
+                }
+            }catch (IllegalStateException e){
+                e.printStackTrace();
+            }
+
+
         }
 
     }
