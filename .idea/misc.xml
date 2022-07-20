@@ -3,12 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.2985" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_add_white_24.xml" value="0.2985" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_arrow_back_white_24.xml" value="0.1965" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_favorite_accent_24.xml" value="0.2985" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2985" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/activity_main.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/custom_player_controller.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_channel_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_my_playlists.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/list_item_channel.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/nav_header.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/toolbar.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

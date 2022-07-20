@@ -4,30 +4,36 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
+        android:id="@+id/tab_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/tab_container">
+        android:background="?attr/tabLayoutBackground"
+        android:orientation="horizontal">
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/fragment_playlist_tab_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable"
+            android:layout_weight="1"
             app:tabGravity="start"
-            android:background="?attr/tabLayoutBackground"
             app:tabIndicatorColor="?attr/tabIndicatorColor"
-            app:tabTextColor="?attr/tabTextColor"
+            app:tabMode="scrollable"
             app:tabSelectedTextColor="?attr/tabSelectedTextColor"
-            android:layout_weight="1"/>
+            android:background="?attr/tabLayoutBackground"
+            app:tabTextColor="?attr/tabTextColor" />
+
         <ImageView
             android:id="@+id/fragment_playlist_add_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_add_box_24"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:contentDescription="@string/add_category"/>
+            android:padding="10dp"
+            android:contentDescription="@string/add_category"
+            android:foreground="?attr/selectableItemBackground"
+            app:tint="?attr/colorAccent"
+            android:src="@drawable/ic_baseline_add_white_24" />
     </LinearLayout>
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragment_playlist_view_pager"

@@ -13,17 +13,11 @@
         android:layout_width="match_parent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="?attr/colorToolbar"/>
-    <FrameLayout
-        android:id="@+id/red_seperator"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/toolbar"
-        android:background="?attr/colorAccent"/>
     <androidx.drawerlayout.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer_layout"
-        android:layout_below="@id/red_seperator"
+        android:layout_below="@id/toolbar"
         >
         <RelativeLayout
             android:id="@+id/rootLayout"
@@ -50,10 +44,12 @@
                     android:id="@+id/search_frame"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
                 <FrameLayout
                     android:id="@+id/contentFrame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="?attr/tabContentBackground"/>
             </RelativeLayout>
         </RelativeLayout>
         <com.google.android.material.navigation.NavigationView
