@@ -22,7 +22,16 @@ import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import java.io.File;
 
 public class DialogUtils {
-    public static AlertDialog createAddCategoryDialog(AppCompatActivity activity){
+    public interface CreateAddCategoryDialogInterface
+    {
+        void onCreateCategory(Category category);
+    }
+
+    public static AlertDialog createAddCategoryDialog(AppCompatActivity activity) {
+        return createAddCategoryDialog(activity, null);
+    }
+
+    public static AlertDialog createAddCategoryDialog(AppCompatActivity activity, CreateAddCategoryDialogInterface createAddCategoryDialogInterface){
         CategoryViewModel categoryViewModel= new ViewModelProvider(activity,new ViewModelProvider.AndroidViewModelFactory(activity.getApplication())).get(CategoryViewModel.class);
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
         View dialogView=View.inflate(activity.getApplicationContext(), R.layout.dialog_add_category,null);
@@ -32,7 +41,10 @@ public class DialogUtils {
             public void onClick(DialogInterface dialog, int which) {
                 String s =((EditText)dialogView.findViewById(R.id.dialog_add_category_edit)).getText().toString();
                 if (!s.equals("")){
-                    categoryViewModel.addCategory(new Category(s));
+                    Category category = new Category(s);
+                    if (createAddCategoryDialogInterface != null)
+                        createAddCategoryDialogInterface.onCreateCategory(category);
+                    categoryViewModel.addCategory(category);
                 }
                 dialog.dismiss();
             }

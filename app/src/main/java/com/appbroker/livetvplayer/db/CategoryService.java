@@ -34,6 +34,7 @@ public class CategoryService {
             }
         }.start();
     }
+
     public void updateCategory(Category category){
         new Thread() {
             @Override

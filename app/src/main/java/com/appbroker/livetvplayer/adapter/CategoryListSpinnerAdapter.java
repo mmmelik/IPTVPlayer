@@ -22,6 +22,15 @@ public class CategoryListSpinnerAdapter extends BaseAdapter {
     private Fragment fragment;
     private List<Category> categoryList;
 
+    public int getCategoryPosFromId(int id) {
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId() == id)
+                return i;
+        }
+
+        return -1;
+    }
+
     public CategoryListSpinnerAdapter(Fragment fragment) {
         this.fragment=fragment;
         this.categoryList=new ArrayList<>();

@@ -2,6 +2,7 @@ package com.appbroker.livetvplayer.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragment {
     private ChannelViewModel channelViewModel;
@@ -44,6 +44,8 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
     private Button selectAllButton;
     private ImageView addCategoryButton;
     private long selectedCategoryId;
+    private int maxId;
+
     public ChannelAddBottomSheetDialogFragment() {
     }
 
@@ -53,7 +55,6 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
         this.channelViewModel= new ViewModelProvider(ChannelAddBottomSheetDialogFragment.this,new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication())).get(ChannelViewModel.class);
         this.categoryViewModel= new ViewModelProvider(ChannelAddBottomSheetDialogFragment.this,new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
         this.selectedCategoryId = getArguments().getLong(Constants.ARGS_CATEGORY_ID,-1);
-        //todo:selected category
     }
 
     @Nullable
@@ -73,6 +74,22 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
 
         CategoryListSpinnerAdapter categoryListSpinnerAdapter=new CategoryListSpinnerAdapter(ChannelAddBottomSheetDialogFragment.this);
         spinner.setAdapter(categoryListSpinnerAdapter);
+        spinner.getAdapter().registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                CategoryListSpinnerAdapter adapter = ((CategoryListSpinnerAdapter)spinner.getAdapter());
+                int pos = adapter.getCategoryPosFromId((int)selectedCategoryId);
+                if (pos >= 0)
+                    spinner.setSelection(pos);
+
+                for(int i = 0; i < adapter.getCount(); i++) {
+                    Category c = (Category) adapter.getItem(i);
+                    if (c.getId() >= maxId)
+                        maxId = c.getId();
+                }
+            }
+        });
+
         ChannelAddRecyclerViewAdapter channelAddRecyclerViewAdapter=new ChannelAddRecyclerViewAdapter(ChannelAddBottomSheetDialogFragment.this);
         channelAddRecyclerViewAdapter.setChannelListListener(new ChannelListListener() {
             @Override
@@ -93,8 +110,14 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
         addCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertDialog= DialogUtils.createAddCategoryDialog((MainActivity)getActivity());
+                AlertDialog alertDialog= DialogUtils.createAddCategoryDialog((MainActivity) getActivity(), new DialogUtils.CreateAddCategoryDialogInterface() {
+                    @Override
+                    public void onCreateCategory(Category category) {
+                        selectedCategoryId = maxId + 1;
+                    }
+                });
                 alertDialog.show();
+
             }
         });
     }
