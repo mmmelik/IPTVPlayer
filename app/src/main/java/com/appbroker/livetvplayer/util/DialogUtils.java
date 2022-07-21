@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -79,7 +80,7 @@ public class DialogUtils {
                 EditText name_edit=view.findViewById(R.id.dialog_edit_channel_name);
                 EditText url_edit=view.findViewById(R.id.dialog_edit_channel_url);
                 name_edit.setText(channel.getName());
-                url_edit.setText(channel.getUri().getPath());
+                url_edit.setText(UriTypeConverter.toString(channel.getUri()));
                 builder.setView(view);
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -127,7 +128,7 @@ public class DialogUtils {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent=new Intent(Intent.ACTION_SEND);
                 intent.setType("application/x-mpegurl");
-                intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(file));
+                intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "com.appbroker.livetvplayer.provider", file));
                 context.startActivity(Intent.createChooser(intent,context.getString(R.string.share_playlist)));
             }
         });

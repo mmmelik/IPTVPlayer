@@ -24,6 +24,7 @@ import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.model.Category;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.UriTypeConverter;
 import com.appbroker.livetvplayer.viewmodel.CategoryViewModel;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 
@@ -94,7 +95,7 @@ public class ChannelListRecyclerViewAdapter extends RecyclerView.Adapter {
                     }
                 });
             }else {
-                subTextView.setText(channel.getUri().getPath());
+                subTextView.setText(UriTypeConverter.toString(channel.getUri()));
             }
             favImage.setOnClickListener(new View.OnClickListener() {
                 @Override

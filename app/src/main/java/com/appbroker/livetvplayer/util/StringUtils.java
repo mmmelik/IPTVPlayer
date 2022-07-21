@@ -31,10 +31,6 @@ public class StringUtils {
         return sb.toString();
     }
     public static Uri makeUri(String url){
-        try {
-            return Uri.parse(URLEncoder.encode(url, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+        return Uri.parse(url);
     }
 }

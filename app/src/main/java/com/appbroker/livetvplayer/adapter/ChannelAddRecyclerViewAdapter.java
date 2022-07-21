@@ -17,6 +17,7 @@ import com.appbroker.livetvplayer.R;
 import com.appbroker.livetvplayer.listener.ChannelListListener;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
+import com.appbroker.livetvplayer.util.UriTypeConverter;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class ChannelAddRecyclerViewAdapter extends RecyclerView.Adapter {
         public void bind(int position){
             Channel channel=channels.get(position);
             nameView.setText(channel.getName());
-            uriView.setText(channel.getUri().getPath());//todo:bak
+            uriView.setText(UriTypeConverter.toString(channel.getUri()));
             checkBox.setChecked(channel.isChecked());
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override

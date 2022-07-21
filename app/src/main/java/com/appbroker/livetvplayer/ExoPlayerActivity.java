@@ -31,6 +31,7 @@ import android.widget.ViewSwitcher;
 import com.appbroker.livetvplayer.model.Channel;
 import com.appbroker.livetvplayer.util.Constants;
 import com.appbroker.livetvplayer.util.PrefHelper;
+import com.appbroker.livetvplayer.util.UriTypeConverter;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
@@ -338,7 +339,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private void channelUpdated(Channel channel) {
         Log.d("channel",channel.getUri().getPath());
         if (currentChannel==null||currentChannel.getId()!=channel.getId()){
-            MediaItem mediaItem = MediaItem.fromUri(channel.getUri().getPath());
+            MediaItem mediaItem = MediaItem.fromUri(UriTypeConverter.toString(channel.getUri()));
             player.setMediaItem(mediaItem);
             player.setPlayWhenReady(true);
             player.prepare();

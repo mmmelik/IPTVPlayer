@@ -11,6 +11,6 @@ public class UriTypeConverter {
     }
     @TypeConverter
     public static String toString(Uri uri){
-        return uri.getPath();
+        return uri.toString();
     }
 }

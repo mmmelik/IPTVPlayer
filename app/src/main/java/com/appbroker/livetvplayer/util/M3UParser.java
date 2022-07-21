@@ -126,12 +126,14 @@ public class M3UParser {
                             break;
                         default:
                             Log.d("content",response.contentType());
-                            if (response.contentType().startsWith("video/")||response.contentType().startsWith("audio/")||response.contentType().contains("vnd.apple.mpegURL")){
+                            boolean isSingleChannel = response.contentType().startsWith("video/")||response.contentType().startsWith("audio/")||response.contentType().contains("vnd.apple.mpegURL");
+                            boolean isPlaylist = response.contentType().startsWith("text/")||response.contentType().contains("mpegurl")||response.contentType().startsWith("application/octet-stream");
+                            if (isSingleChannel && !isPlaylist){
                                 List<Channel> channels=new ArrayList<>();
                                 channels.add(new Channel(Constants.CATEGORY_ID_TEMP,"",Uri.parse(url)));
                                 parserListener.onFinish(Enums.ParseResult.REQUIRE_NAME,channels,response.statusMessage());
                                 break;
-                            }else if (response.contentType().startsWith("text/")||response.contentType().contains("mpegurl")||response.contentType().startsWith("application/octet-stream")){
+                            }else if (isPlaylist){
                                 String s=response.body();
                                 if(!s.contains("#EXTM3U")){
                                     List<Channel> channels=new ArrayList<>();
@@ -185,7 +187,7 @@ public class M3UParser {
         String channelName = null;
         String channelUri;
         while ((line=bufferedReader.readLine())!=null){
-            if ("#EXTM3U".equals(line)){m3uFlag=true;}
+            if (line.startsWith("#EXTM3U")){m3uFlag=true;}
             if (m3uFlag){
                 if (line.startsWith("#EXTINF")){
                     channelName=line.split(",")[1];
@@ -214,7 +216,7 @@ public class M3UParser {
                                     .append("#EXTINF:-1,")
                                     .append(channel.getName())
                                     .append("\n")
-                                    .append(channel.getUri().getPath())
+                                    .append(UriTypeConverter.toString(channel.getUri()))
                                     .append("\n");
                         }
                         PrintStream printStream = new PrintStream(file);
