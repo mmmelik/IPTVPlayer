@@ -11,10 +11,15 @@
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/activity_main.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/custom_player_controller.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_channel_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_export_dialog.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_my_playlists.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/list_item_channel.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/loading_view.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/nav_header.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/settings_activity.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/switch_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/toolbar.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/menu/navigation_menu.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

@@ -10,6 +10,7 @@
     android:layout_marginTop="8dp"
     android:id="@+id/fav_list_item_card"
     android:clickable="true"
+    app:cardBackgroundColor="?attr/cardBackgroundColor"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:focusable="true">
     <RelativeLayout

@@ -42,8 +42,8 @@
     <string name="add_category">ADD CATEGORY</string>
     <string name="select_all">Select All</string>
     <string name="add_channels">Add Channels</string>
-    <string name="unsellect_all">UNSELLECT ALL</string>
-    <string name="title_activity_custom_file_picker">CustomFilePickerActivity</string>
+    <string name="unsellect_all">UNSELECT ALL</string>
+    <string name="title_activity_custom_file_picker">Choose File</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -99,7 +99,7 @@
     <string name="undo">undo</string>
     <string name="grant">grant</string>
     <string name="ui_locked">Player screen locked. Tap unlock icon to unlock.</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
