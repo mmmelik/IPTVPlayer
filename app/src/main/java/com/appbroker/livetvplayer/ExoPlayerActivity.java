@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.mediarouter.app.MediaRouteButton;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -35,22 +36,29 @@ import com.appbroker.livetvplayer.util.UriTypeConverter;
 import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.MediaMetadata;
+import com.google.android.exoplayer2.ext.cast.CastPlayer;
+import com.google.android.exoplayer2.ext.cast.SessionAvailabilityListener;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.dynamite.DynamiteModule;
 
 public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener{
     private int channelId;
     private ChannelViewModel channelViewModel;
     private SimpleExoPlayer player;
-    private ImageView favIcon;
     private TextView playerControllerTitle;
     private LinearLayout container;
     private ImageView lockUIIcon;
@@ -72,7 +80,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
     private final String TAG=this.getClass().getSimpleName();
 
-
+    private CastContext castContext;
+    private CastPlayer castPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
 
         removeSystemUI();
 
+        // Getting the cast context later than onStart can cause device discovery not to take place.
+        try {
+            castContext = CastContext.getSharedInstance(this);
+        } catch (RuntimeException e) {
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause instanceof DynamiteModule.LoadingException) {
+                    //setContentView(R.layout.cast_context_error);
+                    return;
+                }
+                cause = cause.getCause();
+            }
+            // Unknown error. We propagate it.
+            throw e;
+        }
+
+
         Intent intent=getIntent();
         channelId=intent.getIntExtra(Constants.ARGS_CHANNEL_ID,0);
         playerView = findViewById(R.id.player_view);
@@ -92,27 +118,37 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
         player.addListener(this);
         playerView.setPlayer(player);
         playerView.setControllerShowTimeoutMs(5000);
+
+        MediaRouteButton mediaRouteButton = playerView.findViewById(R.id.player_controller_chromecast_icon);
+        CastButtonFactory.setUpMediaRouteButton(this, mediaRouteButton);
+
         channelViewModel.getChannelById(channelId,true).observe(ExoPlayerActivity.this, new Observer<Channel>() {
             @Override
             public void onChanged(Channel channel) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        favIcon.setSelected(channel.isFavorite());
                         channelUpdated(channel);
+
+                        castPlayer = new CastPlayer(castContext);
+                        castPlayer.setPlayWhenReady(true);
+                        castPlayer.setSessionAvailabilityListener(new SessionAvailabilityListener() {
+                            @Override
+                            public void onCastSessionAvailable() {
+                                player.stop();
+                                castPlayer.setMediaItem(player.getCurrentMediaItem());
+                            }
+
+                            @Override
+                            public void onCastSessionUnavailable() {
+                            }
+                        });
+                        //favIcon.setSelected(channel.isFavorite());
                     }
                 });
             }
         });
-        favIcon=playerView.findViewById(R.id.player_controller_fav_icon);
-        favIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentChannel.setFavorite(!favIcon.isSelected());
-                channelViewModel.updateChannel(currentChannel);
-            }
-        });
+
         playerControllerTitle=playerView.findViewById(R.id.player_controller_title);
         adworks();
 
@@ -339,7 +375,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     private void channelUpdated(Channel channel) {
         Log.d("channel",channel.getUri().getPath());
         if (currentChannel==null||currentChannel.getId()!=channel.getId()){
-            MediaItem mediaItem = MediaItem.fromUri(UriTypeConverter.toString(channel.getUri()));
+            MediaMetadata movieMetadata = new MediaMetadata.Builder()
+                    .setTitle(channel.getName())
+                    .build();
+            //movieMetadata.addImage(new WebImage(Uri.parse("https://github.com/mkaflowski/HybridMediaPlayer/blob/master/images/cover.jpg?raw=true")));
+
+            MediaItem mediaItem = new MediaItem.Builder()
+                    .setUri(channel.getUri())
+                    .setMimeType(MimeTypes.APPLICATION_M3U8)
+                    .setMediaMetadata(movieMetadata)
+                    .build();
+
             player.setMediaItem(mediaItem);
             player.setPlayWhenReady(true);
             player.prepare();
@@ -410,6 +456,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
         if (isUILocked){
             playerView.showController();
         }else {
+            castPlayer.release();
             super.onBackPressed();
         }
 
