@@ -39,11 +39,14 @@ import android.widget.Toast;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 public class CustomFilePickerActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -167,7 +170,15 @@ public class CustomFilePickerActivity extends AppCompatActivity {
     }
 
     private void goTo(File file){
-        dirRecyclerView.setAdapter(new FilePickerDirListRecyclerAdapter(this,file.getParentFile(),file.listFiles(), new FileSelectListener() {
+        FileFilter filenameFilter = pathname -> {
+            if (pathname.isDirectory())
+                return true;
+
+            String lowerName = pathname.getName().toLowerCase(Locale.US);
+            return lowerName.endsWith(".m3u8") || lowerName.endsWith(".m3u");
+        };
+
+        dirRecyclerView.setAdapter(new FilePickerDirListRecyclerAdapter(this,file.getParentFile(),file.listFiles(filenameFilter), new FileSelectListener() {
             @Override
             public void onFileSelect(CustomFile customFile) {
                 if(customFile.isParentPlaceHolder() && customFile.getFile().getParent()==null){
@@ -227,11 +238,11 @@ public class CustomFilePickerActivity extends AppCompatActivity {
     private Intent getFilePickerIntent(){
         Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        String[] mimeTypes = {"video/*", "audio/*","application/vnd.apple.mpegurl"};
+        String[] mimeTypes = {"application/vnd.apple.mpegurl", "application/mpegurl", "application/x-mpegurl", "audio/mpegurl", "audio/x-mpegurl"};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         }else {
-            intent.setType("video/*|audio/*|application/vnd.apple.mpegurl");
+            intent.setType("application/vnd.apple.mpegurl|application/mpegurl|application/x-mpegurl|audio/mpegurl|audio/x-mpegurl");
         }
         return intent;
     }

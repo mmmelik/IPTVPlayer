@@ -27,7 +27,7 @@ public abstract class LiveTVDatabase extends RoomDatabase {
     public static synchronized LiveTVDatabase getInstance(Context context){
         if(instance==null){
             instance= Room.databaseBuilder(context, LiveTVDatabase.class,context.getPackageName())
-                    .fallbackToDestructiveMigration()//TODO: version migration.
+                    .fallbackToDestructiveMigration()//FIXME: version migration. yaw bu ne
                     .addCallback(databaseCallback)
                     .build();
         }
@@ -41,7 +41,7 @@ public abstract class LiveTVDatabase extends RoomDatabase {
                 @Override
                 public void run() {
                     instance.categoryDAO().addCategory(new Category("Test Category"));
-                    instance.channelDAO().addChannel(new Channel(1,"Big Buck Bunny(Test Channel)", StringUtils.makeUri("https://ia902804.us.archive.org/7/items/BigBuckBunnyOfficialBlenderFoundationShortFilm720p30fps/Big%20Buck%20Bunny%20Official%20Blender%20Foundation%20Short%20Film%20720p%2030fps.mp4")));
+                    instance.channelDAO().addChannel(new Channel(1,"Big Buck Bunny(Test Channel)", StringUtils.makeUri("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8")));
                 }
             }.start();
         }
