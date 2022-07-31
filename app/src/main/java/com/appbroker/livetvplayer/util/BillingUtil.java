@@ -104,6 +104,9 @@ public class BillingUtil implements PurchasesUpdatedListener{
         billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
             @Override
             public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
+                if (list == null)
+                    return;
+
                 for (PurchaseHistoryRecord p:list){
                     handleOldPurchase(p);
                 }

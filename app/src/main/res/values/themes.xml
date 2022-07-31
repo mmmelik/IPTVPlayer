@@ -19,7 +19,6 @@
         <item name="bottomNavigationTheme">@style/BottomNavigationThemeLight</item>
         <item name="android:textColor">@color/gray_dark</item>
         <item name="cardBackgroundColor">#eeeeee</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetThemeLight</item>
         <item name="alertDialogTheme">@style/AlertDialogThemeLight</item>
 
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
@@ -41,7 +40,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorSecondary">@color/gray_light</item>
         <item name="cardBackgroundColor">@color/th_gray_light</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetThemeDark</item>
         <item name="alertDialogTheme">@style/AlertDialogThemeDark</item>
         
 
@@ -91,16 +89,6 @@
         <item name="colorOnSurface">@color/gray_dark</item>
         <item name="colorPrimary">@color/black</item>
         <item name="android:textColor">@color/white</item>
-    </style>
-    <style name="BottomSheetThemeDark" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="colorAccent">@color/red</item>
-        <item name="colorBottomSheetBackground">@color/gray_universal</item>
-        <item name="bottomSheetStyle">@style/BottomSheetStyleDark</item>
-    </style>
-    <style name="BottomSheetThemeLight" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="colorAccent">@color/red</item>
-        <item name="colorBottomSheetBackground">@color/gray_universal</item>
-        <item name="bottomSheetStyle">@style/BottomSheetStyleLight</item>
     </style>
     <style name="BottomSheetStyleDark">
         <item name="background">@drawable/bottom_sheet_dialog_shape_dark</item>
