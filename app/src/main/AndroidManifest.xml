@@ -130,4 +130,12 @@
             android:value="ca-app-pub-5600029608669706~2533802149" />
     </application>
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+
 </manifest>

@@ -130,7 +130,7 @@ public class BillingUtil implements PurchasesUpdatedListener{
             @Override
             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
                 skuDetails=list;
-                Log.d(TAG,"BillingResult: "+billingResult.getDebugMessage()+" ___ "+skuDetails.size());
+                //Log.d(TAG,"BillingResult: "+billingResult.getDebugMessage()+" ___ "+skuDetails.size()); // fixme skudetails boş gelince size patlıyor.
             }
         });
     }

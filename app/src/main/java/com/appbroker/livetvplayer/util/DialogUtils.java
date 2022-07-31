@@ -126,7 +126,11 @@ public class DialogUtils {
                 dialog.dismiss();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(file),"text/plain");
-                context.startActivity(intent);
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                } else {
+                    ((MainActivity)context).snackbar(context.getString(R.string.no_app_found),null,null);
+                }
             }
         });
         builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {

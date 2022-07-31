@@ -89,6 +89,7 @@
     <string name="delete_channel_are_you_sure">You are about to delete this channel. Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="channel_deleted">Channel deleted successfully.</string>
+    <string name="no_app_found">No suitable app found!</string>
     <string name="edit_channel">Edit Channel</string>
     <string name="channel_url">Channel URL</string>
     <string name="share_playlist">Share Playlist</string>
