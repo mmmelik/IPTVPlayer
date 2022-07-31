@@ -34,7 +34,7 @@ public class DialogUtils {
     public static AlertDialog createAddCategoryDialog(AppCompatActivity activity, CreateAddCategoryDialogInterface createAddCategoryDialogInterface){
         CategoryViewModel categoryViewModel= new ViewModelProvider(activity,new ViewModelProvider.AndroidViewModelFactory(activity.getApplication())).get(CategoryViewModel.class);
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
-        View dialogView=View.inflate(activity.getApplicationContext(), R.layout.dialog_add_category,null);
+        View dialogView=View.inflate(activity, R.layout.dialog_add_category,null);
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override

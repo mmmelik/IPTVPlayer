@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFcf6679</color>
     <color name="accentColor">#bb86fc</color>
-    <color name="gray_light">#6C6C6C</color>
+    <color name="gray_light">#7f7f7f </color>
     <color name="gray_lighter">#8C8B8B</color>
     <color name="gray_dark">#252525</color>
     <color name="gray_universal">#333333</color>

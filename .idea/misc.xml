@@ -12,7 +12,11 @@
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/activity_custom_file_picker.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/activity_main.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/activity_privacy_tos.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/channel_add_bottom_dialog.xml" value="0.33" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/custom_player_controller.xml" value="0.33" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/dialog_add_category.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/dialog_add_channel_name.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/dialog_edit_channel.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/dialog_load_url.xml" value="0.33" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_channel_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/qq/AndroidStudioProjects/IPTVPlayer/app/src/main/res/layout/fragment_export_dialog.xml" value="0.36666666666666664" />
