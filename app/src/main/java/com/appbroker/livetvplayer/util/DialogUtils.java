@@ -120,19 +120,6 @@ public class DialogUtils {
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
         builder.setTitle(R.string.share_playlist);
         builder.setMessage(R.string.want_to_share);
-        builder.setNeutralButton(R.string.see, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file),"text/plain");
-                if (intent.resolveActivity(context.getPackageManager()) != null) {
-                    context.startActivity(intent);
-                } else {
-                    ((MainActivity)context).snackbar(context.getString(R.string.no_app_found),null,null);
-                }
-            }
-        });
         builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
