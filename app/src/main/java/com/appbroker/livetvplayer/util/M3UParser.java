@@ -189,10 +189,11 @@ public class M3UParser {
         while ((line=bufferedReader.readLine())!=null){
             if (line.startsWith("#EXTM3U")){m3uFlag=true;}
             if (m3uFlag){
-                if (line.startsWith("#EXTINF")){
-                    channelName=line.split(",")[1];
-                    inChannelFlag=true;
-                }else if (inChannelFlag){
+                if (line.startsWith("#EXTINF")) {
+                    String[] splitStr = line.split(",");
+                    channelName = splitStr[splitStr.length - 1];
+                    inChannelFlag = true;
+                }else if (inChannelFlag && !line.startsWith("#")){
                     channelUri=line;
                     inChannelFlag=false;
                     channels.add(new Channel(Constants.CATEGORY_ID_TEMP,channelName, StringUtils.makeUri(channelUri)));
