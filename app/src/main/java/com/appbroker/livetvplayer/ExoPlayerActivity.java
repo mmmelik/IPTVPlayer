@@ -37,6 +37,7 @@ import com.appbroker.livetvplayer.viewmodel.ChannelViewModel;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.ext.cast.CastPlayer;
 import com.google.android.exoplayer2.ext.cast.SessionAvailabilityListener;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -55,7 +56,7 @@ import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.dynamite.DynamiteModule;
 
-public class ExoPlayerActivity extends AppCompatActivity implements Player.EventListener{
+public class ExoPlayerActivity extends AppCompatActivity implements Player.Listener{
     private int channelId;
     private ChannelViewModel channelViewModel;
     private SimpleExoPlayer player;
@@ -424,7 +425,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
     }
 
     @Override
-    public void onPlayerError(ExoPlaybackException error) {
+    public void onPlayerError(PlaybackException error) {
         Log.d("exo_error",error.getMessage());
         if (isBehindLiveWindow(error)) {
             // Re-initialize player at the live edge.
@@ -433,15 +434,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Event
             player.play();
         } else {
             // Handle other errors
-           error.printStackTrace();
+            error.printStackTrace();
         }
     }
 
-    private static boolean isBehindLiveWindow(ExoPlaybackException e) {
-        if (e.type != ExoPlaybackException.TYPE_SOURCE) {
-            return false;
-        }
-        Throwable cause = e.getSourceException();
+    private static boolean isBehindLiveWindow(PlaybackException e) {
+        Throwable cause = e.getCause();
         while (cause != null) {
             if (cause instanceof BehindLiveWindowException) {
                 return true;
