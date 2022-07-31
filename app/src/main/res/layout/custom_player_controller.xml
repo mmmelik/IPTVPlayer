@@ -23,6 +23,7 @@
                 android:src="@drawable/ic_baseline_arrow_back_white_24"
                 android:clickable="true"
                 android:focusable="true"
+                android:contentDescription="Go to back"
                 android:background="?attr/selectableItemBackgroundBorderless" />
             <TextView
                 android:id="@+id/player_controller_title"
@@ -53,6 +54,7 @@
                 android:scaleType="center"
                 android:src="@drawable/ic_baseline_lock_open_24"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Lock player"
                 android:clickable="true"
                 android:focusable="true"/>
         </LinearLayout>
@@ -133,6 +135,7 @@
                 android:scaleType="center"
                 android:src="@drawable/ic_baseline_lock_24"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Unlock player"
                 android:clickable="true"
                 android:focusable="true"/>
         </LinearLayout>

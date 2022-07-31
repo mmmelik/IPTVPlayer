@@ -227,8 +227,10 @@ public class CustomFilePickerActivity extends AppCompatActivity {
         externalAppsIdMap=new HashMap<>();
         for (ResolveInfo resolveInfo:resolveInfoList){
             Log.d("activity",resolveInfo.toString());
-            int id=new Random().nextInt(Integer.MAX_VALUE);
-            menu.add(R.id.file_picker_navigation_group_external_apps,id,Menu.NONE,resolveInfo.loadLabel(packageManager));
+            CharSequence label = resolveInfo.loadLabel(packageManager);
+            int id = label.hashCode();
+
+            menu.add(R.id.file_picker_navigation_group_external_apps, id, Menu.NONE, label);
             menu.findItem(id).setIcon(resolveInfo.loadIcon(packageManager));
             externalAppsIdMap.put(id,resolveInfo);
         }
