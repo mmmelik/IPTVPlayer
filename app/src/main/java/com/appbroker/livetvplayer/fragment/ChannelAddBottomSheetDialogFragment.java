@@ -50,6 +50,11 @@ public class ChannelAddBottomSheetDialogFragment extends BottomSheetDialogFragme
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.channelViewModel= new ViewModelProvider(ChannelAddBottomSheetDialogFragment.this,new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication())).get(ChannelViewModel.class);

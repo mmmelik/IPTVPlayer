@@ -454,7 +454,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements Player.Liste
         if (isUILocked){
             playerView.showController();
         }else {
-            castPlayer.release();
+            if (castPlayer != null)
+                castPlayer.release();
             super.onBackPressed();
         }
 
