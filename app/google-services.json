@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "944164433414",
+    "project_id": "iptvplayer-996b4",
+    "storage_bucket": "iptvplayer-996b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944164433414:android:e2128af9a96bfff6615d87",
+        "android_client_info": {
+          "package_name": "com.appbroker.livetvplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944164433414-9t7qgn0hpp5iqrb8eqgh6ig4ropambhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9Ewb9VlP0e6ov5GaheqHxMH0bEiwHu4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944164433414-9t7qgn0hpp5iqrb8eqgh6ig4ropambhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
